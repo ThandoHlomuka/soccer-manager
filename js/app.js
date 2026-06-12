@@ -186,20 +186,20 @@ $('add-team-btn').addEventListener('click', () => { $('team-form').reset(); $('t
 $('team-form').addEventListener('submit', async e => {
   e.preventDefault();
   const id = $('team-id').value, d = { name:$('team-name').value, shortName:$('team-short-name').value, stadium:$('team-stadium').value, founded:$('team-founded').value, colors:[$('team-color1').value,$('team-color2').value] };
-  if (id) { await api.put(`/api/teams/${id}`, d); showToast('Team updated.'); }
+  if (id) { await api.put(`/api/teams?id=${id}`, d); showToast('Team updated.'); }
   else { await api.post('/api/teams', d); showToast('Team created.'); }
   closeModal('team-modal'); renderTeams(); populateTeamSelects();
 });
 
 window.editTeam = async id => {
-  const t = await api.get(`/api/teams/${id}`);
+  const t = await api.get(`/api/teams?id=${id}`);
   $('team-id').value = t.id; $('team-name').value = t.name||''; $('team-short-name').value = t.shortName||''; $('team-stadium').value = t.stadium||''; $('team-founded').value = t.founded||''; $('team-color1').value = t.colors?.[0]||'#e00000'; $('team-color2').value = t.colors?.[1]||'#ffffff';
   $('team-modal-title').textContent = 'Edit Team'; openModal('team-modal');
 };
 
 window.deleteTeam = async id => {
   if (!confirm('Delete this team?')) return;
-  await api.del(`/api/teams/${id}`); showToast('Team deleted.'); renderTeams(); populateTeamSelects();
+  await api.del(`/api/teams?id=${id}`); showToast('Team deleted.'); renderTeams(); populateTeamSelects();
 };
 
 /* ─── Players ─── */
@@ -236,13 +236,13 @@ $('player-form').addEventListener('submit', async e => {
     passing:parseInt($('player-passing').value)||50, defending:parseInt($('player-defending').value)||50,
     dribbling:parseInt($('player-dribbling').value)||50, physical:parseInt($('player-physical').value)||50,
   };
-  if (id) { await api.put(`/api/players/${id}`, d); showToast('Player updated.'); }
+  if (id) { await api.put(`/api/players?id=${id}`, d); showToast('Player updated.'); }
   else { await api.post('/api/players', d); showToast('Player created.'); }
   closeModal('player-modal'); renderPlayers();
 });
 
 window.editPlayer = async id => {
-  const p = await api.get(`/api/players/${id}`);
+  const p = await api.get(`/api/players?id=${id}`);
   $('player-id').value = p.id; $('player-name').value = p.name||''; $('player-number').value = p.number||'';
   $('player-position').value = p.position||'MID'; $('player-nationality').value = p.nationality||'';
   $('player-team-id').value = p.teamId||'';
@@ -258,7 +258,7 @@ window.editPlayer = async id => {
 
 window.deletePlayer = async id => {
   if (!confirm('Delete this player?')) return;
-  await api.del(`/api/players/${id}`); showToast('Player deleted.'); renderPlayers();
+  await api.del(`/api/players?id=${id}`); showToast('Player deleted.'); renderPlayers();
 };
 
 function resetAbilities() {
@@ -280,7 +280,7 @@ function resetAbilities() {
 
 /* ─── Player Detail ─── */
 window.showPlayerDetail = async id => {
-  const p = await api.get(`/api/players/${id}`);
+  const p = await api.get(`/api/players?id=${id}`);
   const team = state.teams.find(t => t.id === p.teamId);
   const ovr = p.pace ? Math.round((p.pace + p.shooting + p.passing + p.defending + p.dribbling + p.physical) / 6) : 'N/A';
   const footIcons = { right: '🦶', left: '🦶', both: '🦶' };
@@ -352,20 +352,20 @@ $('match-form').addEventListener('submit', async e => {
   const d = { homeTeamId:$('match-home-team-id').value, awayTeamId:$('match-away-team-id').value, date:$('match-date').value, time:$('match-time').value, venue:$('match-venue').value, homeScore:$('match-home-score').value !== '' ? parseInt($('match-home-score').value) : null, awayScore:$('match-away-score').value !== '' ? parseInt($('match-away-score').value) : null, status:$('match-status').value };
   if (!d.homeTeamId||!d.awayTeamId) { showToast('Select both teams.'); return; }
   if (d.homeTeamId===d.awayTeamId) { showToast('Team cannot play itself.'); return; }
-  if (id) { await api.put(`/api/matches/${id}`, d); showToast('Match updated.'); }
+  if (id) { await api.put(`/api/matches?id=${id}`, d); showToast('Match updated.'); }
   else { await api.post('/api/matches', d); showToast('Match scheduled.'); }
   closeModal('match-modal'); renderMatches();
 });
 
 window.editMatch = async id => {
-  const m = await api.get(`/api/matches/${id}`);
+  const m = await api.get(`/api/matches?id=${id}`);
   $('match-id').value = m.id; $('match-home-team-id').value = m.homeTeamId; $('match-away-team-id').value = m.awayTeamId; $('match-date').value = m.date||''; $('match-time').value = m.time||''; $('match-venue').value = m.venue||''; $('match-home-score').value = m.homeScore??''; $('match-away-score').value = m.awayScore??''; $('match-status').value = m.status||'scheduled';
   $('match-modal-title').textContent = 'Edit Match'; openModal('match-modal');
 };
 
 window.deleteMatch = async id => {
   if (!confirm('Delete this match?')) return;
-  await api.del(`/api/matches/${id}`); showToast('Match deleted.'); renderMatches();
+  await api.del(`/api/matches?id=${id}`); showToast('Match deleted.'); renderMatches();
 };
 
 /* ─── Standings ─── */
@@ -436,13 +436,13 @@ $('ad-form').addEventListener('submit', async e => {
     linkUrl:$('ad-link-url').value, status:$('ad-status').value,
     clicks:parseInt($('ad-clicks').value)||0,
   };
-  if (id) { await api.put(`/api/ads/${id}`, d); showToast('Ad updated.'); }
+  if (id) { await api.put(`/api/ads?id=${id}`, d); showToast('Ad updated.'); }
   else { await api.post('/api/ads', d); showToast('Ad created.'); }
   closeModal('ad-modal'); renderAds();
 });
 
 window.editAd = async id => {
-  const a = await api.get(`/api/ads/${id}`);
+  const a = await api.get(`/api/ads?id=${id}`);
   $('ad-id').value = a.id; $('ad-advertiser').value = a.advertiser||'';
   $('ad-product').value = a.product||''; $('ad-description').value = a.description||'';
   $('ad-image-url').value = a.imageUrl||''; $('ad-link-url').value = a.linkUrl||'';
@@ -452,7 +452,7 @@ window.editAd = async id => {
 
 window.deleteAd = async id => {
   if (!confirm('Delete this ad?')) return;
-  await api.del(`/api/ads/${id}`); showToast('Ad deleted.'); renderAds();
+  await api.del(`/api/ads?id=${id}`); showToast('Ad deleted.'); renderAds();
 };
 
 /* ─── Transfers ─── */
@@ -501,7 +501,7 @@ $('transfer-form').addEventListener('submit', async e => {
     date:$('transfer-date').value, status:$('transfer-status').value,
   };
   if (!d.playerId||!d.fromTeamId||!d.toTeamId) { showToast('Fill in all required fields.'); return; }
-  if (id) { await api.put(`/api/transfers/${id}`, d); showToast('Transfer updated.'); }
+  if (id) { await api.put(`/api/transfers?id=${id}`, d); showToast('Transfer updated.'); }
   else { await api.post('/api/transfers', d); showToast('Transfer created.'); }
   closeModal('transfer-modal'); renderTransfers();
 });
@@ -518,7 +518,7 @@ function populateTransferSelects() {
 }
 
 window.editTransfer = async id => {
-  const t = await api.get(`/api/transfers/${id}`);
+  const t = await api.get(`/api/transfers?id=${id}`);
   populateTransferSelects();
   $('transfer-id').value = t.id; $('transfer-player-id').value = t.playerId||'';
   $('transfer-from-team-id').value = t.fromTeamId||''; $('transfer-to-team-id').value = t.toTeamId||'';
@@ -529,7 +529,7 @@ window.editTransfer = async id => {
 
 window.deleteTransfer = async id => {
   if (!confirm('Delete this transfer?')) return;
-  await api.del(`/api/transfers/${id}`); showToast('Transfer deleted.'); renderTransfers();
+  await api.del(`/api/transfers?id=${id}`); showToast('Transfer deleted.'); renderTransfers();
 };
 
 /* ─── Social ─── */

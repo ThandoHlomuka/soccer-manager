@@ -1,32 +1,34 @@
-const db = require('../../lib/db');
+const db = require('../lib/db');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { method, body } = req;
+  const { id } = req.query;
 
   try {
-    if (method === 'GET') {
+    if (req.method === 'GET') {
+      if (id) {
+        const match = await db.get('match', id);
+        if (!match) return res.status(404).json({ error: 'Match not found.' });
+        const teams = await db.list('team');
+        const teamMap = {};
+        teams.forEach(t => teamMap[t.id] = t);
+        return res.json({ ...match, homeTeam: teamMap[match.homeTeamId] || null, awayTeam: teamMap[match.awayTeamId] || null });
+      }
       const matches = await db.list('match');
       const teams = await db.list('team');
       const teamMap = {};
       teams.forEach(t => teamMap[t.id] = t);
-
-      const enriched = matches.map(m => ({
-        ...m,
-        homeTeam: teamMap[m.homeTeamId] || null,
-        awayTeam: teamMap[m.awayTeamId] || null,
-      }));
-
+      const enriched = matches.map(m => ({ ...m, homeTeam: teamMap[m.homeTeamId] || null, awayTeam: teamMap[m.awayTeamId] || null }));
       enriched.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
       return res.json({ matches: enriched });
     }
 
-    if (method === 'POST') {
-      const { homeTeamId, awayTeamId, date, time, venue, homeScore, awayScore, status, events } = body || {};
+    if (req.method === 'POST') {
+      const { homeTeamId, awayTeamId, date, time, venue, homeScore, awayScore, status, events } = req.body || {};
       if (!homeTeamId || !awayTeamId || !date) {
         return res.status(400).json({ error: 'homeTeamId, awayTeamId, and date are required.' });
       }
@@ -34,27 +36,33 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'A team cannot play against itself.' });
       }
 
-      const id = db.uid();
+      const mid = db.uid();
       const match = {
-        id,
-        homeTeamId,
-        awayTeamId,
-        date: date || '',
-        time: time || '',
-        venue: venue || '',
-        homeScore: homeScore != null ? homeScore : null,
+        id: mid, homeTeamId, awayTeamId, date: date || '', time: time || '',
+        venue: venue || '', homeScore: homeScore != null ? homeScore : null,
         awayScore: awayScore != null ? awayScore : null,
-        status: status || 'scheduled',
-        events: events || [],
+        status: status || 'scheduled', events: events || [],
       };
 
-      await db.create('match', id, match);
+      await db.create('match', mid, match);
 
       if (match.homeScore != null && match.awayScore != null) {
         await updatePlayerStats(match);
       }
 
       return res.status(201).json(match);
+    }
+
+    if (req.method === 'PUT') {
+      if (!id) return res.status(400).json({ error: 'Match ID is required.' });
+      const match = await db.update('match', id, req.body || {});
+      return res.json(match);
+    }
+
+    if (req.method === 'DELETE') {
+      if (!id) return res.status(400).json({ error: 'Match ID is required.' });
+      await db.remove('match', id);
+      return res.json({ success: true });
     }
   } catch (err) {
     return res.status(err.status || 500).json({ error: err.message });
