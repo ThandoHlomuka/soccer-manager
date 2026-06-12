@@ -1,238 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soccer Manager</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PitchMaster - Soccer Manager</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div id="app">
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1 class="app-name">Soccer Manager</h1>
+      <div class="sidebar-logo">
+        <span class="logo-icon">⚽</span>
+        <span class="logo-text">PitchMaster</span>
       </div>
-      <nav class="nav">
-        <a href="#dashboard" class="nav-link" data-view="dashboard">Dashboard</a>
-        <a href="#teams" class="nav-link" data-view="teams">Teams</a>
-        <a href="#players" class="nav-link" data-view="players">Players</a>
-        <a href="#matches" class="nav-link" data-view="matches">Matches</a>
-        <a href="#standings" class="nav-link" data-view="standings">Standings</a>
-        <a href="#stats" class="nav-link" data-view="stats">Stats</a>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-link active" data-view="dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-link" data-view="teams">
+          <span class="nav-icon">⚽</span>
+          <span class="nav-label">Teams</span>
+        </a>
+        <a href="#" class="nav-link" data-view="players">
+          <span class="nav-icon">👕</span>
+          <span class="nav-label">Players</span>
+        </a>
+        <a href="#" class="nav-link" data-view="matches">
+          <span class="nav-icon">🏆</span>
+          <span class="nav-label">Matches</span>
+        </a>
+        <a href="#" class="nav-link" data-view="standings">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Standings</span>
+        </a>
+        <a href="#" class="nav-link" data-view="stats">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Stats</span>
+        </a>
       </nav>
     </aside>
-    <main class="main-content">
-      <section id="view-dashboard" class="view active">
-        <h2>Dashboard</h2>
-        <div class="stat-cards">
-          <div class="stat-card">
-            <span class="stat-label">Teams</span>
-            <span id="stat-teams-count" class="stat-value">0</span>
+    <main id="main-content">
+
+      <!-- Dashboard -->
+      <section id="view-dashboard" class="view active-view">
+        <h1 class="view-title">Dashboard</h1>
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-icon">⚽</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-teams">0</span>
+              <span class="stat-label">Teams</span>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-label">Players</span>
-            <span id="stat-players-count" class="stat-value">0</span>
+          <div class="glass-card stat-card">
+            <div class="stat-icon">👕</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-players">0</span>
+              <span class="stat-label">Players</span>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-label">Matches Played</span>
-            <span id="stat-matches-count" class="stat-value">0</span>
+          <div class="glass-card stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-matches">0</span>
+              <span class="stat-label">Matches Played</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-goals">0</span>
+              <span class="stat-label">Total Goals</span>
+            </div>
           </div>
         </div>
-        <div class="dashboard-section">
-          <h3>Recent Matches</h3>
-          <ul id="recent-matches-list" class="list"></ul>
-        </div>
-        <div class="dashboard-section">
-          <h3>Top Scorers</h3>
-          <ul id="top-scorers-list" class="list"></ul>
+        <div class="dashboard-grid">
+          <div class="glass-card">
+            <h2 class="card-title">Recent Results</h2>
+            <ul class="result-list" id="recent-results">
+              <li class="result-item"><span class="result-teams">Team A 2 - 1 Team B</span><span class="result-date">Today</span></li>
+              <li class="result-item"><span class="result-teams">Team C 0 - 0 Team D</span><span class="result-date">Yesterday</span></li>
+              <li class="result-item"><span class="result-teams">Team E 3 - 2 Team F</span><span class="result-date">2 days ago</span></li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h2 class="card-title">Top Scorers</h2>
+            <ul class="scorer-list" id="top-scorers">
+              <li class="scorer-item"><span class="scorer-rank">1</span><span class="scorer-name">Player Name</span><span class="scorer-goals">10</span></li>
+              <li class="scorer-item"><span class="scorer-rank">2</span><span class="scorer-name">Player Name</span><span class="scorer-goals">8</span></li>
+              <li class="scorer-item"><span class="scorer-rank">3</span><span class="scorer-name">Player Name</span><span class="scorer-goals">6</span></li>
+            </ul>
+          </div>
         </div>
       </section>
+
+      <!-- Teams -->
       <section id="view-teams" class="view">
         <div class="view-header">
-          <h2>Teams</h2>
-          <button class="btn btn-primary" id="add-team-btn">Add Team</button>
+          <h1 class="view-title">Teams</h1>
+          <button class="btn btn-primary" id="add-team-btn">+ Add Team</button>
         </div>
-        <div id="teams-list" class="cards-grid"></div>
+        <div class="card-grid" id="teams-grid"></div>
       </section>
+
+      <!-- Players -->
       <section id="view-players" class="view">
         <div class="view-header">
-          <h2>Players</h2>
-          <button class="btn btn-primary" id="add-player-btn">Add Player</button>
+          <h1 class="view-title">Players</h1>
+          <div class="view-controls">
+            <select class="form-select" id="player-team-filter">
+              <option value="">All Teams</option>
+            </select>
+            <button class="btn btn-primary" id="add-player-btn">+ Add Player</button>
+          </div>
         </div>
-        <div class="filters">
-          <label for="player-team-filter">Filter by Team:</label>
-          <select id="player-team-filter">
-            <option value="">All Teams</option>
-          </select>
-        </div>
-        <div id="players-list" class="cards-grid"></div>
+        <div class="card-grid" id="players-grid"></div>
       </section>
+
+      <!-- Matches -->
       <section id="view-matches" class="view">
         <div class="view-header">
-          <h2>Matches</h2>
-          <button class="btn btn-primary" id="schedule-match-btn">Schedule Match</button>
+          <h1 class="view-title">Matches</h1>
+          <button class="btn btn-primary" id="add-match-btn">+ Schedule Match</button>
         </div>
-        <div id="matches-list" class="matches-list"></div>
+        <div class="match-list" id="matches-list"></div>
       </section>
+
+      <!-- Standings -->
       <section id="view-standings" class="view">
         <div class="view-header">
-          <h2>Standings</h2>
+          <h1 class="view-title">Standings</h1>
         </div>
-        <div id="standings-table"></div>
+        <div class="glass-card table-wrapper">
+          <table class="standings-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>P</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>GD</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody id="standings-body"></tbody>
+          </table>
+        </div>
       </section>
+
+      <!-- Stats -->
       <section id="view-stats" class="view">
         <div class="view-header">
-          <h2>Stats</h2>
+          <h1 class="view-title">Stats</h1>
         </div>
-        <div class="stats-sections">
-          <div class="stats-section">
-            <h3>Top Scorers</h3>
-            <div id="stats-top-scorers"></div>
+        <div class="stats-grid">
+          <div class="glass-card leaderboard-card">
+            <h2 class="card-title">Top Scorers</h2>
+            <ol class="leaderboard-list" id="stats-scorers"></ol>
           </div>
-          <div class="stats-section">
-            <h3>Top Assists</h3>
-            <div id="stats-top-assists"></div>
+          <div class="glass-card leaderboard-card">
+            <h2 class="card-title">Top Assists</h2>
+            <ol class="leaderboard-list" id="stats-assists"></ol>
           </div>
-          <div class="stats-section">
-            <h3>Most Appearances</h3>
-            <div id="stats-most-appearances"></div>
+          <div class="glass-card leaderboard-card">
+            <h2 class="card-title">Most Appearances</h2>
+            <ol class="leaderboard-list" id="stats-apps"></ol>
           </div>
-          <div class="stats-section">
-            <h3>Clean Sheets</h3>
-            <div id="stats-clean-sheets"></div>
+          <div class="glass-card leaderboard-card">
+            <h2 class="card-title">Clean Sheets</h2>
+            <ol class="leaderboard-list" id="stats-clean-sheets"></ol>
           </div>
         </div>
       </section>
+
     </main>
   </div>
 
-  <div id="team-modal" class="modal" style="display:none">
+  <!-- Team Modal -->
+  <div class="modal" id="team-modal">
+    <div class="modal-backdrop"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="team-modal-title">Add Team</h3>
-        <button class="modal-close" data-close="team-modal">&times;</button>
+        <h2 class="modal-title">Team</h2>
+        <button class="modal-close">&times;</button>
       </div>
-      <form id="team-form">
-        <input type="hidden" id="team-id">
+      <form class="modal-form" id="team-form">
+        <input type="hidden" id="team-id" />
         <div class="form-group">
-          <label for="team-name">Name</label>
-          <input type="text" id="team-name" required>
+          <label class="form-label" for="team-name">Name</label>
+          <input class="form-input" type="text" id="team-name" required />
         </div>
         <div class="form-group">
-          <label for="team-short-name">Short Name</label>
-          <input type="text" id="team-short-name">
+          <label class="form-label" for="team-short-name">Short Name</label>
+          <input class="form-input" type="text" id="team-short-name" />
         </div>
         <div class="form-group">
-          <label for="team-stadium">Stadium</label>
-          <input type="text" id="team-stadium">
+          <label class="form-label" for="team-stadium">Stadium</label>
+          <input class="form-input" type="text" id="team-stadium" />
         </div>
         <div class="form-group">
-          <label for="team-founded">Founded</label>
-          <input type="text" id="team-founded">
+          <label class="form-label" for="team-founded">Founded</label>
+          <input class="form-input" type="number" id="team-founded" />
         </div>
-        <div class="form-group">
-          <label>Colors</label>
-          <div class="color-inputs">
-            <input type="color" id="team-color1" value="#e00000">
-            <input type="color" id="team-color2" value="#ffffff">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="team-color1">Color 1</label>
+            <input class="form-input form-color" type="color" id="team-color1" value="#22c55e" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="team-color2">Color 2</label>
+            <input class="form-input form-color" type="color" id="team-color2" value="#0a0e1a" />
           </div>
         </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Save Team</button>
-          <button type="button" class="btn btn-cancel" data-close="team-modal">Cancel</button>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div id="player-modal" class="modal" style="display:none">
+  <!-- Player Modal -->
+  <div class="modal" id="player-modal">
+    <div class="modal-backdrop"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="player-modal-title">Add Player</h3>
-        <button class="modal-close" data-close="player-modal">&times;</button>
+        <h2 class="modal-title">Player</h2>
+        <button class="modal-close">&times;</button>
       </div>
-      <form id="player-form">
-        <input type="hidden" id="player-id">
+      <form class="modal-form" id="player-form">
+        <input type="hidden" id="player-id" />
         <div class="form-group">
-          <label for="player-name">Name</label>
-          <input type="text" id="player-name" required>
+          <label class="form-label" for="player-name">Name</label>
+          <input class="form-input" type="text" id="player-name" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="player-number">Number</label>
+            <input class="form-input" type="number" id="player-number" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="player-position">Position</label>
+            <select class="form-select" id="player-position">
+              <option value="GK">GK</option>
+              <option value="DEF">DEF</option>
+              <option value="MID">MID</option>
+              <option value="FW">FW</option>
+            </select>
+          </div>
         </div>
         <div class="form-group">
-          <label for="player-number">Number</label>
-          <input type="number" id="player-number">
+          <label class="form-label" for="player-team-id">Team</label>
+          <select class="form-select" id="player-team-id"></select>
         </div>
         <div class="form-group">
-          <label for="player-position">Position</label>
-          <select id="player-position">
-            <option value="GK">Goalkeeper</option>
-            <option value="DEF">Defender</option>
-            <option value="MID">Midfielder</option>
-            <option value="FW">Forward</option>
-          </select>
+          <label class="form-label" for="player-nationality">Nationality</label>
+          <input class="form-input" type="text" id="player-nationality" />
         </div>
-        <div class="form-group">
-          <label for="player-team">Team</label>
-          <select id="player-team-id"></select>
-        </div>
-        <div class="form-group">
-          <label for="player-nationality">Nationality</label>
-          <input type="text" id="player-nationality">
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Save Player</button>
-          <button type="button" class="btn btn-cancel" data-close="player-modal">Cancel</button>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div id="match-modal" class="modal" style="display:none">
+  <!-- Match Modal -->
+  <div class="modal" id="match-modal">
+    <div class="modal-backdrop"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="match-modal-title">Schedule Match</h3>
-        <button class="modal-close" data-close="match-modal">&times;</button>
+        <h2 class="modal-title">Match</h2>
+        <button class="modal-close">&times;</button>
       </div>
-      <form id="match-form">
-        <input type="hidden" id="match-id">
+      <form class="modal-form" id="match-form">
+        <input type="hidden" id="match-id" />
         <div class="form-group">
-          <label for="match-home-team">Home Team</label>
-          <select id="match-home-team-id"></select>
+          <label class="form-label" for="match-home-team-id">Home Team</label>
+          <select class="form-select" id="match-home-team-id"></select>
         </div>
         <div class="form-group">
-          <label for="match-away-team">Away Team</label>
-          <select id="match-away-team-id"></select>
+          <label class="form-label" for="match-away-team-id">Away Team</label>
+          <select class="form-select" id="match-away-team-id"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="match-date">Date</label>
+            <input class="form-input" type="date" id="match-date" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="match-time">Time</label>
+            <input class="form-input" type="time" id="match-time" />
+          </div>
         </div>
         <div class="form-group">
-          <label for="match-date">Date</label>
-          <input type="date" id="match-date">
+          <label class="form-label" for="match-venue">Venue</label>
+          <input class="form-input" type="text" id="match-venue" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="match-home-score">Home Score</label>
+            <input class="form-input" type="number" id="match-home-score" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="match-away-score">Away Score</label>
+            <input class="form-input" type="number" id="match-away-score" />
+          </div>
         </div>
         <div class="form-group">
-          <label for="match-time">Time</label>
-          <input type="time" id="match-time">
-        </div>
-        <div class="form-group">
-          <label for="match-venue">Venue</label>
-          <input type="text" id="match-venue">
-        </div>
-        <div class="form-group">
-          <label for="match-home-score">Home Score</label>
-          <input type="number" id="match-home-score">
-        </div>
-        <div class="form-group">
-          <label for="match-away-score">Away Score</label>
-          <input type="number" id="match-away-score">
-        </div>
-        <div class="form-group">
-          <label for="match-status">Status</label>
-          <select id="match-status">
+          <label class="form-label" for="match-status">Status</label>
+          <select class="form-select" id="match-status">
             <option value="scheduled">Scheduled</option>
             <option value="played">Played</option>
             <option value="postponed">Postponed</option>
           </select>
         </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Save Match</button>
-          <button type="button" class="btn btn-cancel" data-close="match-modal">Cancel</button>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Event Modal -->
+  <div class="modal" id="event-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Match Event</h2>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form class="modal-form" id="event-form">
+        <input type="hidden" id="match-event-id" />
+        <div class="form-group">
+          <label class="form-label" for="event-type">Event Type</label>
+          <select class="form-select" id="event-type">
+            <option value="goal">Goal</option>
+            <option value="assist">Assist</option>
+            <option value="yellowCard">Yellow Card</option>
+            <option value="redCard">Red Card</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="event-player-id">Player</label>
+          <select class="form-select" id="event-player-id"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="event-minute">Minute</label>
+          <input class="form-input" type="number" id="event-minute" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>
     </div>
