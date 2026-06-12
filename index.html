@@ -38,59 +38,63 @@
           <span class="nav-icon">📈</span>
           <span class="nav-label">Stats</span>
         </a>
+        <a href="#" class="nav-link" data-view="ads">
+          <span class="nav-icon">📢</span>
+          <span class="nav-label">Ads</span>
+        </a>
+        <a href="#" class="nav-link" data-view="transfers">
+          <span class="nav-icon">🔄</span>
+          <span class="nav-label">Transfers</span>
+        </a>
+        <a href="#" class="nav-link" data-view="social">
+          <span class="nav-icon">💬</span>
+          <span class="nav-label">Social</span>
+        </a>
       </nav>
     </aside>
-    <main id="main-content">
+    <main id="main-content" class="main">
 
       <!-- Dashboard -->
-      <section id="view-dashboard" class="view active-view">
+      <section id="view-dashboard" class="view active">
         <h1 class="view-title">Dashboard</h1>
         <div class="stat-grid">
           <div class="glass-card stat-card">
             <div class="stat-icon">⚽</div>
             <div class="stat-info">
-              <span class="stat-value" id="stat-teams">0</span>
+              <span class="stat-value" id="stat-teams-count">0</span>
               <span class="stat-label">Teams</span>
             </div>
           </div>
           <div class="glass-card stat-card">
             <div class="stat-icon">👕</div>
             <div class="stat-info">
-              <span class="stat-value" id="stat-players">0</span>
+              <span class="stat-value" id="stat-players-count">0</span>
               <span class="stat-label">Players</span>
             </div>
           </div>
           <div class="glass-card stat-card">
             <div class="stat-icon">🏆</div>
             <div class="stat-info">
-              <span class="stat-value" id="stat-matches">0</span>
+              <span class="stat-value" id="stat-matches-count">0</span>
               <span class="stat-label">Matches Played</span>
             </div>
           </div>
           <div class="glass-card stat-card">
             <div class="stat-icon">⚡</div>
             <div class="stat-info">
-              <span class="stat-value" id="stat-goals">0</span>
+              <span class="stat-value" id="stat-goals-count">0</span>
               <span class="stat-label">Total Goals</span>
             </div>
           </div>
         </div>
-        <div class="dashboard-grid">
+        <div class="dash-grid">
           <div class="glass-card">
             <h2 class="card-title">Recent Results</h2>
-            <ul class="result-list" id="recent-results">
-              <li class="result-item"><span class="result-teams">Team A 2 - 1 Team B</span><span class="result-date">Today</span></li>
-              <li class="result-item"><span class="result-teams">Team C 0 - 0 Team D</span><span class="result-date">Yesterday</span></li>
-              <li class="result-item"><span class="result-teams">Team E 3 - 2 Team F</span><span class="result-date">2 days ago</span></li>
-            </ul>
+            <div id="recent-matches-list"></div>
           </div>
           <div class="glass-card">
             <h2 class="card-title">Top Scorers</h2>
-            <ul class="scorer-list" id="top-scorers">
-              <li class="scorer-item"><span class="scorer-rank">1</span><span class="scorer-name">Player Name</span><span class="scorer-goals">10</span></li>
-              <li class="scorer-item"><span class="scorer-rank">2</span><span class="scorer-name">Player Name</span><span class="scorer-goals">8</span></li>
-              <li class="scorer-item"><span class="scorer-rank">3</span><span class="scorer-name">Player Name</span><span class="scorer-goals">6</span></li>
-            </ul>
+            <div id="top-scorers-list"></div>
           </div>
         </div>
       </section>
@@ -101,7 +105,7 @@
           <h1 class="view-title">Teams</h1>
           <button class="btn btn-primary" id="add-team-btn">+ Add Team</button>
         </div>
-        <div class="card-grid" id="teams-grid"></div>
+        <div class="card-grid" id="teams-list"></div>
       </section>
 
       <!-- Players -->
@@ -115,14 +119,14 @@
             <button class="btn btn-primary" id="add-player-btn">+ Add Player</button>
           </div>
         </div>
-        <div class="card-grid" id="players-grid"></div>
+        <div class="card-grid" id="players-list"></div>
       </section>
 
       <!-- Matches -->
       <section id="view-matches" class="view">
         <div class="view-header">
           <h1 class="view-title">Matches</h1>
-          <button class="btn btn-primary" id="add-match-btn">+ Schedule Match</button>
+          <button class="btn btn-primary" id="schedule-match-btn">+ Schedule Match</button>
         </div>
         <div class="match-list" id="matches-list"></div>
       </section>
@@ -132,25 +136,7 @@
         <div class="view-header">
           <h1 class="view-title">Standings</h1>
         </div>
-        <div class="glass-card table-wrapper">
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Team</th>
-                <th>P</th>
-                <th>W</th>
-                <th>D</th>
-                <th>L</th>
-                <th>GF</th>
-                <th>GA</th>
-                <th>GD</th>
-                <th>Pts</th>
-              </tr>
-            </thead>
-            <tbody id="standings-body"></tbody>
-          </table>
-        </div>
+        <div id="standings-table"></div>
       </section>
 
       <!-- Stats -->
@@ -161,19 +147,66 @@
         <div class="stats-grid">
           <div class="glass-card leaderboard-card">
             <h2 class="card-title">Top Scorers</h2>
-            <ol class="leaderboard-list" id="stats-scorers"></ol>
+            <div class="leaderboard-list" id="stats-top-scorers"></div>
           </div>
           <div class="glass-card leaderboard-card">
             <h2 class="card-title">Top Assists</h2>
-            <ol class="leaderboard-list" id="stats-assists"></ol>
+            <div class="leaderboard-list" id="stats-top-assists"></div>
           </div>
           <div class="glass-card leaderboard-card">
             <h2 class="card-title">Most Appearances</h2>
-            <ol class="leaderboard-list" id="stats-apps"></ol>
+            <div class="leaderboard-list" id="stats-most-appearances"></div>
           </div>
           <div class="glass-card leaderboard-card">
             <h2 class="card-title">Clean Sheets</h2>
-            <ol class="leaderboard-list" id="stats-clean-sheets"></ol>
+            <div class="leaderboard-list" id="stats-clean-sheets"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ads -->
+      <section id="view-ads" class="view">
+        <div class="view-header">
+          <h1 class="view-title">Advertisements</h1>
+          <button class="btn btn-primary" id="add-ad-btn">+ Add Ad</button>
+        </div>
+        <div class="card-grid" id="ads-list"></div>
+      </section>
+
+      <!-- Transfers -->
+      <section id="view-transfers" class="view">
+        <div class="view-header">
+          <h1 class="view-title">Transfer Market</h1>
+          <button class="btn btn-primary" id="add-transfer-btn">+ New Transfer</button>
+        </div>
+        <div class="card-grid" id="transfers-list"></div>
+      </section>
+
+      <!-- Social -->
+      <section id="view-social" class="view">
+        <div class="view-header">
+          <h1 class="view-title">Social</h1>
+        </div>
+        <div class="social-grid">
+          <div class="glass-card social-section">
+            <div class="social-section-header">
+              <h2 class="card-title">Messages</h2>
+              <button class="btn btn-primary btn-sm" id="send-msg-btn">+ New Message</button>
+            </div>
+            <div id="social-messages"></div>
+          </div>
+          <div class="glass-card social-section">
+            <div class="social-section-header">
+              <h2 class="card-title">Groups</h2>
+              <button class="btn btn-primary btn-sm" id="add-group-btn">+ New Group</button>
+            </div>
+            <div id="social-groups"></div>
+          </div>
+          <div class="glass-card social-section">
+            <div class="social-section-header">
+              <h2 class="card-title">Followers</h2>
+            </div>
+            <div id="social-followers"></div>
           </div>
         </div>
       </section>
@@ -183,11 +216,11 @@
 
   <!-- Team Modal -->
   <div class="modal" id="team-modal">
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" data-close="team-modal"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Team</h2>
-        <button class="modal-close">&times;</button>
+        <h2 class="modal-title" id="team-modal-title">Team</h2>
+        <button class="modal-close" data-close="team-modal">&times;</button>
       </div>
       <form class="modal-form" id="team-form">
         <input type="hidden" id="team-id" />
@@ -218,7 +251,7 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-outline" type="button" data-close="team-modal">Cancel</button>
           <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>
@@ -227,11 +260,11 @@
 
   <!-- Player Modal -->
   <div class="modal" id="player-modal">
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" data-close="player-modal"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Player</h2>
-        <button class="modal-close">&times;</button>
+        <h2 class="modal-title" id="player-modal-title">Player</h2>
+        <button class="modal-close" data-close="player-modal">&times;</button>
       </div>
       <form class="modal-form" id="player-form">
         <input type="hidden" id="player-id" />
@@ -262,21 +295,88 @@
           <label class="form-label" for="player-nationality">Nationality</label>
           <input class="form-input" type="text" id="player-nationality" />
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="player-foot">Foot</label>
+            <select class="form-select" id="player-foot">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="player-diet">Diet</label>
+            <select class="form-select" id="player-diet">
+              <option value="">Standard</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="halal">Halal</option>
+              <option value="keto">Keto</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Abilities</label>
+          <div class="abilities-grid">
+            <div class="ability-item">
+              <label class="ability-label">Pace</label>
+              <input class="ability-range" type="range" id="player-pace" min="1" max="99" value="50" />
+              <span class="ability-value" id="player-pace-val">50</span>
+            </div>
+            <div class="ability-item">
+              <label class="ability-label">Shooting</label>
+              <input class="ability-range" type="range" id="player-shooting" min="1" max="99" value="50" />
+              <span class="ability-value" id="player-shooting-val">50</span>
+            </div>
+            <div class="ability-item">
+              <label class="ability-label">Passing</label>
+              <input class="ability-range" type="range" id="player-passing" min="1" max="99" value="50" />
+              <span class="ability-value" id="player-passing-val">50</span>
+            </div>
+            <div class="ability-item">
+              <label class="ability-label">Defending</label>
+              <input class="ability-range" type="range" id="player-defending" min="1" max="99" value="50" />
+              <span class="ability-value" id="player-defending-val">50</span>
+            </div>
+            <div class="ability-item">
+              <label class="ability-label">Dribbling</label>
+              <input class="ability-range" type="range" id="player-dribbling" min="1" max="99" value="50" />
+              <span class="ability-value" id="player-dribbling-val">50</span>
+            </div>
+            <div class="ability-item">
+              <label class="ability-label">Physical</label>
+              <input class="ability-range" type="range" id="player-physical" min="1" max="99" value="50" />
+              <span class="ability-value" id="player-physical-val">50</span>
+            </div>
+          </div>
+        </div>
         <div class="modal-actions">
-          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-outline" type="button" data-close="player-modal">Cancel</button>
           <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Player Detail Modal -->
+  <div class="modal" id="player-detail-modal">
+    <div class="modal-backdrop" data-close="player-detail-modal"></div>
+    <div class="modal-content modal-content-lg">
+      <div class="modal-header">
+        <h2 class="modal-title" id="player-detail-title">Player Details</h2>
+        <button class="modal-close" data-close="player-detail-modal">&times;</button>
+      </div>
+      <div id="player-detail-body"></div>
+    </div>
+  </div>
+
   <!-- Match Modal -->
   <div class="modal" id="match-modal">
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" data-close="match-modal"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Match</h2>
-        <button class="modal-close">&times;</button>
+        <h2 class="modal-title" id="match-modal-title">Match</h2>
+        <button class="modal-close" data-close="match-modal">&times;</button>
       </div>
       <form class="modal-form" id="match-form">
         <input type="hidden" id="match-id" />
@@ -321,7 +421,7 @@
           </select>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-outline" type="button" data-close="match-modal">Cancel</button>
           <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>
@@ -330,11 +430,11 @@
 
   <!-- Event Modal -->
   <div class="modal" id="event-modal">
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" data-close="event-modal"></div>
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Match Event</h2>
-        <button class="modal-close">&times;</button>
+        <button class="modal-close" data-close="event-modal">&times;</button>
       </div>
       <form class="modal-form" id="event-form">
         <input type="hidden" id="match-event-id" />
@@ -356,7 +456,163 @@
           <input class="form-input" type="number" id="event-minute" />
         </div>
         <div class="modal-actions">
-          <button class="btn btn-outline" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-outline" type="button" data-close="event-modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ad Modal -->
+  <div class="modal" id="ad-modal">
+    <div class="modal-backdrop" data-close="ad-modal"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="ad-modal-title">Ad</h2>
+        <button class="modal-close" data-close="ad-modal">&times;</button>
+      </div>
+      <form class="modal-form" id="ad-form">
+        <input type="hidden" id="ad-id" />
+        <div class="form-group">
+          <label class="form-label" for="ad-advertiser">Advertiser</label>
+          <input class="form-input" type="text" id="ad-advertiser" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ad-product">Product</label>
+          <input class="form-input" type="text" id="ad-product" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ad-description">Description</label>
+          <textarea class="form-input" id="ad-description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ad-image-url">Image URL</label>
+          <input class="form-input" type="url" id="ad-image-url" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ad-link-url">Link URL</label>
+          <input class="form-input" type="url" id="ad-link-url" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="ad-status">Status</label>
+            <select class="form-select" id="ad-status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ad-clicks">Clicks</label>
+            <input class="form-input" type="number" id="ad-clicks" value="0" readonly />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close="ad-modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Transfer Modal -->
+  <div class="modal" id="transfer-modal">
+    <div class="modal-backdrop" data-close="transfer-modal"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="transfer-modal-title">Transfer</h2>
+        <button class="modal-close" data-close="transfer-modal">&times;</button>
+      </div>
+      <form class="modal-form" id="transfer-form">
+        <input type="hidden" id="transfer-id" />
+        <div class="form-group">
+          <label class="form-label" for="transfer-player-id">Player</label>
+          <select class="form-select" id="transfer-player-id"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="transfer-from-team-id">From Team</label>
+            <select class="form-select" id="transfer-from-team-id"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="transfer-to-team-id">To Team</label>
+            <select class="form-select" id="transfer-to-team-id"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="transfer-fee">Fee (£)</label>
+            <input class="form-input" type="number" id="transfer-fee" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="transfer-date">Date</label>
+            <input class="form-input" type="date" id="transfer-date" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="transfer-status">Status</label>
+          <select class="form-select" id="transfer-status">
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close="transfer-modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Message Modal -->
+  <div class="modal" id="message-modal">
+    <div class="modal-backdrop" data-close="message-modal"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Send Message</h2>
+        <button class="modal-close" data-close="message-modal">&times;</button>
+      </div>
+      <form class="modal-form" id="message-form">
+        <div class="form-group">
+          <label class="form-label" for="msg-recipient">To (Player)</label>
+          <select class="form-select" id="msg-recipient"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="msg-subject">Subject</label>
+          <input class="form-input" type="text" id="msg-subject" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="msg-body">Message</label>
+          <textarea class="form-input" id="msg-body" rows="4"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close="message-modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Group Modal -->
+  <div class="modal" id="group-modal">
+    <div class="modal-backdrop" data-close="group-modal"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="group-modal-title">Group</h2>
+        <button class="modal-close" data-close="group-modal">&times;</button>
+      </div>
+      <form class="modal-form" id="group-form">
+        <input type="hidden" id="group-id" />
+        <div class="form-group">
+          <label class="form-label" for="group-name">Group Name</label>
+          <input class="form-input" type="text" id="group-name" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="group-description">Description</label>
+          <textarea class="form-input" id="group-description" rows="3"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" type="button" data-close="group-modal">Cancel</button>
           <button class="btn btn-primary" type="submit">Save</button>
         </div>
       </form>

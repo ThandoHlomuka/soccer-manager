@@ -28,11 +28,17 @@ navLinks.forEach(l => l.addEventListener('click', e => { e.preventDefault(); loc
 window.addEventListener('hashchange', handleHash);
 
 /* ─── Modal helpers ─── */
-function openModal(id) { const el = $(id); if (el) { el.style.display = 'flex'; setTimeout(() => el.classList.add('open'), 10); document.body.style.overflow = 'hidden'; } }
-function closeModal(id) { const el = $(id); if (el) { el.classList.remove('open'); el.style.display = 'none'; document.body.style.overflow = ''; } }
+function openModal(id) {
+  const el = $(id);
+  if (el) { el.style.display = 'flex'; setTimeout(() => el.classList.add('open'), 10); document.body.style.overflow = 'hidden'; }
+}
+function closeModal(id) {
+  const el = $(id);
+  if (el) { el.classList.remove('open'); el.style.display = 'none'; document.body.style.overflow = ''; }
+}
 document.addEventListener('click', e => {
   const c = e.target.closest('[data-close]'); if (c) closeModal(c.dataset.close);
-  if (e.target.classList.contains('modal-backdrop')) closeModal(e.target.id);
+  if (e.target.classList.contains('modal-backdrop')) closeModal(e.target.closest('.modal').id);
 });
 
 /* ─── Toast ─── */
@@ -45,6 +51,7 @@ function showToast(msg) {
 
 /* ─── Animate counter ─── */
 function animateCounter(el, target, dur = 800) {
+  if (!el) return;
   const start = performance.now();
   const from = 0;
   function step(now) {
@@ -81,24 +88,24 @@ async function seedData() {
   state.teams = created;
 
   const playersData = [
-    { name:'Bukayo Saka', number:7, position:'FW', teamId:created[0].id, nationality:'England' },
-    { name:'Martin Ødegaard', number:8, position:'MID', teamId:created[0].id, nationality:'Norway' },
-    { name:'Gabriel Jesus', number:9, position:'FW', teamId:created[0].id, nationality:'Brazil' },
-    { name:'Cole Palmer', number:20, position:'MID', teamId:created[1].id, nationality:'England' },
-    { name:'Enzo Fernández', number:8, position:'MID', teamId:created[1].id, nationality:'Argentina' },
-    { name:'Raheem Sterling', number:7, position:'FW', teamId:created[1].id, nationality:'England' },
-    { name:'Mohamed Salah', number:11, position:'FW', teamId:created[2].id, nationality:'Egypt' },
-    { name:'Virgil van Dijk', number:4, position:'DEF', teamId:created[2].id, nationality:'Netherlands' },
-    { name:'Alisson Becker', number:1, position:'GK', teamId:created[2].id, nationality:'Brazil' },
-    { name:'Erling Haaland', number:9, position:'FW', teamId:created[3].id, nationality:'Norway' },
-    { name:'Kevin De Bruyne', number:17, position:'MID', teamId:created[3].id, nationality:'Belgium' },
-    { name:'Phil Foden', number:47, position:'MID', teamId:created[3].id, nationality:'England' },
-    { name:'Bruno Fernandes', number:8, position:'MID', teamId:created[4].id, nationality:'Portugal' },
-    { name:'Marcus Rashford', number:10, position:'FW', teamId:created[4].id, nationality:'England' },
-    { name:'Casemiro', number:18, position:'MID', teamId:created[4].id, nationality:'Brazil' },
-    { name:'Son Heung-min', number:7, position:'FW', teamId:created[5].id, nationality:'South Korea' },
-    { name:'James Maddison', number:10, position:'MID', teamId:created[5].id, nationality:'England' },
-    { name:'Cristian Romero', number:13, position:'DEF', teamId:created[5].id, nationality:'Argentina' },
+    { name:'Bukayo Saka', number:7, position:'FW', teamId:created[0].id, nationality:'England', foot:'left', diet:'', pace:82, shooting:76, passing:80, defending:42, dribbling:84, physical:68 },
+    { name:'Martin Ødegaard', number:8, position:'MID', teamId:created[0].id, nationality:'Norway', foot:'left', diet:'', pace:65, shooting:72, passing:88, defending:55, dribbling:82, physical:60 },
+    { name:'Gabriel Jesus', number:9, position:'FW', teamId:created[0].id, nationality:'Brazil', foot:'right', diet:'', pace:86, shooting:80, passing:74, defending:38, dribbling:85, physical:72 },
+    { name:'Cole Palmer', number:20, position:'MID', teamId:created[1].id, nationality:'England', foot:'left', diet:'', pace:70, shooting:74, passing:78, defending:50, dribbling:80, physical:62 },
+    { name:'Enzo Fernández', number:8, position:'MID', teamId:created[1].id, nationality:'Argentina', foot:'right', diet:'', pace:68, shooting:70, passing:84, defending:62, dribbling:78, physical:70 },
+    { name:'Raheem Sterling', number:7, position:'FW', teamId:created[1].id, nationality:'England', foot:'right', diet:'', pace:90, shooting:74, passing:72, defending:35, dribbling:82, physical:60 },
+    { name:'Mohamed Salah', number:11, position:'FW', teamId:created[2].id, nationality:'Egypt', foot:'left', diet:'halal', pace:88, shooting:84, passing:78, defending:40, dribbling:86, physical:72 },
+    { name:'Virgil van Dijk', number:4, position:'DEF', teamId:created[2].id, nationality:'Netherlands', foot:'right', diet:'', pace:70, shooting:60, passing:76, defending:90, dribbling:67, physical:86 },
+    { name:'Alisson Becker', number:1, position:'GK', teamId:created[2].id, nationality:'Brazil', foot:'right', diet:'', pace:55, shooting:20, passing:65, defending:20, dribbling:40, physical:75 },
+    { name:'Erling Haaland', number:9, position:'FW', teamId:created[3].id, nationality:'Norway', foot:'left', diet:'', pace:86, shooting:92, passing:66, defending:40, dribbling:78, physical:88 },
+    { name:'Kevin De Bruyne', number:17, position:'MID', teamId:created[3].id, nationality:'Belgium', foot:'right', diet:'', pace:72, shooting:80, passing:92, defending:54, dribbling:84, physical:72 },
+    { name:'Phil Foden', number:47, position:'MID', teamId:created[3].id, nationality:'England', foot:'left', diet:'', pace:78, shooting:76, passing:82, defending:48, dribbling:86, physical:62 },
+    { name:'Bruno Fernandes', number:8, position:'MID', teamId:created[4].id, nationality:'Portugal', foot:'right', diet:'', pace:70, shooting:78, passing:86, defending:58, dribbling:80, physical:68 },
+    { name:'Marcus Rashford', number:10, position:'FW', teamId:created[4].id, nationality:'England', foot:'right', diet:'vegetarian', pace:90, shooting:78, passing:72, defending:34, dribbling:82, physical:68 },
+    { name:'Casemiro', number:18, position:'MID', teamId:created[4].id, nationality:'Brazil', foot:'right', diet:'', pace:62, shooting:68, passing:74, defending:84, dribbling:70, physical:82 },
+    { name:'Son Heung-min', number:7, position:'FW', teamId:created[5].id, nationality:'South Korea', foot:'right', diet:'', pace:86, shooting:82, passing:76, defending:40, dribbling:84, physical:68 },
+    { name:'James Maddison', number:10, position:'MID', teamId:created[5].id, nationality:'England', foot:'right', diet:'', pace:70, shooting:74, passing:82, defending:52, dribbling:80, physical:60 },
+    { name:'Cristian Romero', number:13, position:'DEF', teamId:created[5].id, nationality:'Argentina', foot:'right', diet:'', pace:72, shooting:58, passing:68, defending:86, dribbling:64, physical:80 },
   ];
   const pl = [];
   for (const p of playersData) {
@@ -134,6 +141,9 @@ async function renderView(view) {
   else if (view === 'matches') renderMatches();
   else if (view === 'standings') renderStandings();
   else if (view === 'stats') renderStats();
+  else if (view === 'ads') renderAds();
+  else if (view === 'transfers') renderTransfers();
+  else if (view === 'social') renderSocial();
 }
 
 /* ─── Dashboard ─── */
@@ -206,17 +216,26 @@ function renderPlayers() {
   if (!list.length) { container.innerHTML = '<div class="empty"><p>No players found</p></div>'; return; }
   container.innerHTML = list.map(p => {
     const team = state.teams.find(t => t.id === p.teamId);
-    return `<div class="glass-card player-card"><div class="player-avatar">${(p.name||'?')[0]}</div><div class="player-info"><div class="player-name">${esc(p.name)} <span class="pos-badge">${p.position||'MID'}</span> ${p.number ? '#'+p.number : ''}</div><div class="player-meta">${team ? esc(team.name) : 'No team'}${p.nationality ? ' · '+esc(p.nationality) : ''}</div><div class="player-stats-row"><div class="player-stat-item"><div class="val">${p.goals||0}</div><div class="lbl">G</div></div><div class="player-stat-item"><div class="val">${p.assists||0}</div><div class="lbl">A</div></div><div class="player-stat-item"><div class="val">${p.appearances||0}</div><div class="lbl">Apps</div></div></div></div><div class="card-actions"><button class="btn btn-outline btn-sm" onclick="editPlayer('${p.id}')">Edit</button><button class="btn btn-danger btn-sm" onclick="deletePlayer('${p.id}')">Del</button></div></div>`;
+    const ovr = p.pace && p.shooting ? Math.round((p.pace + p.shooting + p.passing + p.defending + p.dribbling + p.physical) / 6) : null;
+    return `<div class="glass-card player-card" style="cursor:pointer" onclick="showPlayerDetail('${p.id}')"><div class="player-avatar">${(p.name||'?')[0]}</div><div class="player-info"><div class="player-name">${esc(p.name)} <span class="pos-badge">${p.position||'MID'}</span> ${p.number ? '#'+p.number : ''}</div><div class="player-meta">${team ? esc(team.name) : 'No team'}${p.nationality ? ' · '+esc(p.nationality) : ''}${ovr ? ' · OVR '+ovr : ''}</div><div class="player-stats-row"><div class="player-stat-item"><div class="val">${p.goals||0}</div><div class="lbl">G</div></div><div class="player-stat-item"><div class="val">${p.assists||0}</div><div class="lbl">A</div></div><div class="player-stat-item"><div class="val">${p.appearances||0}</div><div class="lbl">Apps</div></div></div></div><div class="card-actions"><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editPlayer('${p.id}')">Edit</button><button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deletePlayer('${p.id}')">Del</button></div></div>`;
   }).join('');
 }
 
-if ($('player-team-filter')) $('player-team-filter').addEventListener('change', renderPlayers);
+$('player-team-filter').addEventListener('change', renderPlayers);
 
-$('add-player-btn').addEventListener('click', () => { $('player-form').reset(); $('player-id').value = ''; $('player-modal-title').textContent = 'Add Player'; openModal('player-modal'); });
+$('add-player-btn').addEventListener('click', () => { $('player-form').reset(); $('player-id').value = ''; $('player-modal-title').textContent = 'Add Player'; resetAbilities(); openModal('player-modal'); });
 
 $('player-form').addEventListener('submit', async e => {
   e.preventDefault();
-  const id = $('player-id').value, d = { name:$('player-name').value, number:parseInt($('player-number').value)||0, position:$('player-position').value, teamId:$('player-team-id').value, nationality:$('player-nationality').value };
+  const id = $('player-id').value, d = {
+    name:$('player-name').value, number:parseInt($('player-number').value)||0,
+    position:$('player-position').value, teamId:$('player-team-id').value,
+    nationality:$('player-nationality').value,
+    foot:$('player-foot').value, diet:$('player-diet').value,
+    pace:parseInt($('player-pace').value)||50, shooting:parseInt($('player-shooting').value)||50,
+    passing:parseInt($('player-passing').value)||50, defending:parseInt($('player-defending').value)||50,
+    dribbling:parseInt($('player-dribbling').value)||50, physical:parseInt($('player-physical').value)||50,
+  };
   if (id) { await api.put(`/api/players/${id}`, d); showToast('Player updated.'); }
   else { await api.post('/api/players', d); showToast('Player created.'); }
   closeModal('player-modal'); renderPlayers();
@@ -224,13 +243,93 @@ $('player-form').addEventListener('submit', async e => {
 
 window.editPlayer = async id => {
   const p = await api.get(`/api/players/${id}`);
-  $('player-id').value = p.id; $('player-name').value = p.name||''; $('player-number').value = p.number||''; $('player-position').value = p.position||'MID'; $('player-nationality').value = p.nationality||''; $('player-team-id').value = p.teamId||'';
+  $('player-id').value = p.id; $('player-name').value = p.name||''; $('player-number').value = p.number||'';
+  $('player-position').value = p.position||'MID'; $('player-nationality').value = p.nationality||'';
+  $('player-team-id').value = p.teamId||'';
+  $('player-foot').value = p.foot||'right'; $('player-diet').value = p.diet||'';
+  $('player-pace').value = p.pace||50; $('player-pace-val').textContent = p.pace||50;
+  $('player-shooting').value = p.shooting||50; $('player-shooting-val').textContent = p.shooting||50;
+  $('player-passing').value = p.passing||50; $('player-passing-val').textContent = p.passing||50;
+  $('player-defending').value = p.defending||50; $('player-defending-val').textContent = p.defending||50;
+  $('player-dribbling').value = p.dribbling||50; $('player-dribbling-val').textContent = p.dribbling||50;
+  $('player-physical').value = p.physical||50; $('player-physical-val').textContent = p.physical||50;
   $('player-modal-title').textContent = 'Edit Player'; openModal('player-modal');
 };
 
 window.deletePlayer = async id => {
   if (!confirm('Delete this player?')) return;
   await api.del(`/api/players/${id}`); showToast('Player deleted.'); renderPlayers();
+};
+
+function resetAbilities() {
+  ['pace','shooting','passing','defending','dribbling','physical'].forEach(a => {
+    const s = $(`player-${a}`); const v = $(`player-${a}-val`);
+    if (s) { s.value = 50; if (v) v.textContent = '50'; }
+  });
+}
+
+['pace','shooting','passing','defending','dribbling','physical'].forEach(a => {
+  const slider = $(`player-${a}`);
+  if (slider) {
+    slider.addEventListener('input', () => {
+      const val = $(`player-${a}-val`);
+      if (val) val.textContent = slider.value;
+    });
+  }
+});
+
+/* ─── Player Detail ─── */
+window.showPlayerDetail = async id => {
+  const p = await api.get(`/api/players/${id}`);
+  const team = state.teams.find(t => t.id === p.teamId);
+  const ovr = p.pace ? Math.round((p.pace + p.shooting + p.passing + p.defending + p.dribbling + p.physical) / 6) : 'N/A';
+  const footIcons = { right: '🦶', left: '🦶', both: '🦶' };
+  const dietLabels = { vegetarian: '🥦 Vegetarian', vegan: '🌱 Vegan', halal: '🥩 Halal', keto: '🥑 Keto' };
+  const abilities = [
+    { label:'Pace', val:p.pace||50 }, { label:'Shooting', val:p.shooting||50 },
+    { label:'Passing', val:p.passing||50 }, { label:'Defending', val:p.defending||50 },
+    { label:'Dribbling', val:p.dribbling||50 }, { label:'Physical', val:p.physical||50 },
+  ];
+  $('player-detail-title').textContent = p.name || 'Player Details';
+  $('player-detail-body').innerHTML = `
+    <div class="player-detail-header">
+      <div class="player-detail-avatar">${(p.name||'?')[0]}</div>
+      <div class="player-detail-info">
+        <div class="player-detail-name">${esc(p.name)}</div>
+        <div class="player-detail-meta">
+          <span>${p.position||'MID'}</span>
+          <span>${p.number ? '#'+p.number : ''}</span>
+          <span>${team ? esc(team.name) : 'Free Agent'}</span>
+          <span>${p.nationality||''}</span>
+          <span>OVR ${ovr}</span>
+        </div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <h3>Details</h3>
+      <div class="detail-grid">
+        <div class="detail-stat"><div class="val">${p.goals||0}</div><div class="lbl">Goals</div></div>
+        <div class="detail-stat"><div class="val">${p.assists||0}</div><div class="lbl">Assists</div></div>
+        <div class="detail-stat"><div class="val">${p.appearances||0}</div><div class="lbl">Apps</div></div>
+        <div class="detail-stat"><div class="val">${p.cleanSheets||0}</div><div class="lbl">Clean Sheets</div></div>
+        <div class="detail-stat"><div class="val">${(p.foot||'right')[0].toUpperCase()+p.foot?.slice(1)||'Right'}</div><div class="lbl">Foot</div></div>
+        <div class="detail-stat"><div class="val">${dietLabels[p.diet] || 'Standard'}</div><div class="lbl">Diet</div></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <h3>Abilities</h3>
+      ${abilities.map(a => `
+        <div class="ability-bar-container">
+          <span class="ability-bar-label">${a.label}</span>
+          <div class="ability-bar-track">
+            <div class="ability-bar-fill" style="width:${a.val}%"></div>
+          </div>
+          <span class="ability-bar-value">${a.val}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  openModal('player-detail-modal');
 };
 
 /* ─── Matches ─── */
@@ -290,12 +389,265 @@ async function renderStats() {
 
 function renderLeaderboard(containerId, data, field) {
   const c = $(containerId);
+  if (!c) return;
   if (!data||!data.length) { c.innerHTML = '<div class="empty"><p>No data yet</p></div>'; return; }
   c.innerHTML = data.map((p,i) => {
     const rankClass = i < 3 ? `rank rank-${i+1}` : 'rank';
     return `<div class="stat-leader"><div class="${rankClass}">${i+1}</div><div class="av">${(p.name||'?')[0]}</div><div class="info"><div class="nm">${esc(p.name)}</div><div class="tm">${esc(p.teamName||'')}</div></div><div class="val">${p[field]||0}</div></div>`;
   }).join('');
 }
+
+/* ─── Ads ─── */
+let adsData = [];
+
+async function renderAds() {
+  const res = await api.get('/api/ads');
+  adsData = res.ads || [];
+  const container = $('ads-list');
+  if (!adsData.length) { container.innerHTML = '<div class="empty"><p>No ads yet. Click "+ Add Ad" to create one.</p></div>'; return; }
+  container.innerHTML = adsData.map(a => `
+    <div class="glass-card ad-card">
+      ${a.imageUrl ? `<img class="ad-image" src="${esc(a.imageUrl)}" alt="${esc(a.product)}" onerror="this.style.display='none'" />` : `<div class="ad-image" style="display:flex;align-items:center;justify-content:center;font-size:2rem;background:rgba(34,197,94,0.05)">📢</div>`}
+      <div class="ad-info">
+        <div class="ad-product">${esc(a.product)}</div>
+        <div class="ad-advertiser">${esc(a.advertiser)}</div>
+        ${a.description ? `<div class="ad-desc">${esc(a.description)}</div>` : ''}
+        <div class="ad-footer">
+          <span class="badge badge-${a.status}">${a.status}</span>
+          <span class="ad-clicks">${a.clicks||0} clicks</span>
+          ${a.linkUrl ? `<a class="ad-link" href="${esc(a.linkUrl)}" target="_blank">Visit →</a>` : ''}
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="editAd('${a.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAd('${a.id}')">Del</button>
+      </div>
+    </div>`).join('');
+}
+
+$('add-ad-btn').addEventListener('click', () => { $('ad-form').reset(); $('ad-id').value = ''; $('ad-clicks').value = 0; $('ad-modal-title').textContent = 'Add Ad'; openModal('ad-modal'); });
+
+$('ad-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const id = $('ad-id').value;
+  const d = {
+    advertiser:$('ad-advertiser').value, product:$('ad-product').value,
+    description:$('ad-description').value, imageUrl:$('ad-image-url').value,
+    linkUrl:$('ad-link-url').value, status:$('ad-status').value,
+    clicks:parseInt($('ad-clicks').value)||0,
+  };
+  if (id) { await api.put(`/api/ads/${id}`, d); showToast('Ad updated.'); }
+  else { await api.post('/api/ads', d); showToast('Ad created.'); }
+  closeModal('ad-modal'); renderAds();
+});
+
+window.editAd = async id => {
+  const a = await api.get(`/api/ads/${id}`);
+  $('ad-id').value = a.id; $('ad-advertiser').value = a.advertiser||'';
+  $('ad-product').value = a.product||''; $('ad-description').value = a.description||'';
+  $('ad-image-url').value = a.imageUrl||''; $('ad-link-url').value = a.linkUrl||'';
+  $('ad-status').value = a.status||'active'; $('ad-clicks').value = a.clicks||0;
+  $('ad-modal-title').textContent = 'Edit Ad'; openModal('ad-modal');
+};
+
+window.deleteAd = async id => {
+  if (!confirm('Delete this ad?')) return;
+  await api.del(`/api/ads/${id}`); showToast('Ad deleted.'); renderAds();
+};
+
+/* ─── Transfers ─── */
+let transfersData = [];
+
+async function renderTransfers() {
+  const res = await api.get('/api/transfers');
+  transfersData = res.transfers || [];
+  const container = $('transfers-list');
+  if (!transfersData.length) { container.innerHTML = '<div class="empty"><p>No transfers yet. Click "+ New Transfer" to add one.</p></div>'; return; }
+  container.innerHTML = transfersData.map(t => {
+    const fromTeam = state.teams.find(te => te.id === t.fromTeamId);
+    const toTeam = state.teams.find(te => te.id === t.toTeamId);
+    const fee = t.fee ? `£${parseFloat(t.fee).toLocaleString()}` : 'Free';
+    return `<div class="glass-card transfer-card">
+      <div class="transfer-icon">🔄</div>
+      <div class="transfer-info">
+        <div class="transfer-player">${esc(t.playerName||'Unknown Player')}</div>
+        <div class="transfer-teams">${fromTeam ? esc(fromTeam.shortName||fromTeam.name) : '?'} <span class="transfer-arrow">→</span> ${toTeam ? esc(toTeam.shortName||toTeam.name) : '?'}</div>
+        <div class="transfer-meta">
+          <span class="transfer-fee">${fee}</span>
+          <span>${t.date||''}</span>
+          <span class="badge badge-${t.status}">${t.status||'pending'}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="editTransfer('${t.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTransfer('${t.id}')">Del</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+$('add-transfer-btn').addEventListener('click', () => {
+  $('transfer-form').reset(); $('transfer-id').value = '';
+  $('transfer-modal-title').textContent = 'New Transfer';
+  populateTransferSelects(); openModal('transfer-modal');
+});
+
+$('transfer-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const id = $('transfer-id').value;
+  const d = {
+    playerId:$('transfer-player-id').value, fromTeamId:$('transfer-from-team-id').value,
+    toTeamId:$('transfer-to-team-id').value, fee:$('transfer-fee').value ? parseFloat($('transfer-fee').value) : null,
+    date:$('transfer-date').value, status:$('transfer-status').value,
+  };
+  if (!d.playerId||!d.fromTeamId||!d.toTeamId) { showToast('Fill in all required fields.'); return; }
+  if (id) { await api.put(`/api/transfers/${id}`, d); showToast('Transfer updated.'); }
+  else { await api.post('/api/transfers', d); showToast('Transfer created.'); }
+  closeModal('transfer-modal'); renderTransfers();
+});
+
+function populateTransferSelects() {
+  const teamOpts = state.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  const playerOpts = state.players.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  ['transfer-player-id'].forEach(id => {
+    const sel = $(id); if (sel) { const v = sel.value; sel.innerHTML = '<option value="">Select Player</option>'+playerOpts; sel.value = v; }
+  });
+  ['transfer-from-team-id','transfer-to-team-id'].forEach(id => {
+    const sel = $(id); if (sel) { const v = sel.value; sel.innerHTML = '<option value="">Select Team</option>'+teamOpts; sel.value = v; }
+  });
+}
+
+window.editTransfer = async id => {
+  const t = await api.get(`/api/transfers/${id}`);
+  populateTransferSelects();
+  $('transfer-id').value = t.id; $('transfer-player-id').value = t.playerId||'';
+  $('transfer-from-team-id').value = t.fromTeamId||''; $('transfer-to-team-id').value = t.toTeamId||'';
+  $('transfer-fee').value = t.fee||''; $('transfer-date').value = t.date||'';
+  $('transfer-status').value = t.status||'pending';
+  $('transfer-modal-title').textContent = 'Edit Transfer'; openModal('transfer-modal');
+};
+
+window.deleteTransfer = async id => {
+  if (!confirm('Delete this transfer?')) return;
+  await api.del(`/api/transfers/${id}`); showToast('Transfer deleted.'); renderTransfers();
+};
+
+/* ─── Social ─── */
+async function renderSocial() {
+  await renderMessages();
+  await renderGroups();
+  await renderFollowers();
+}
+
+async function renderMessages() {
+  try {
+    const res = await api.get('/api/social?type=messages');
+    const msgs = res.messages || [];
+    const container = $('social-messages');
+    if (!msgs.length) { container.innerHTML = '<div class="empty"><p>No messages yet</p></div>'; return; }
+    container.innerHTML = msgs.map(m => {
+      const sender = state.players.find(p => p.id === m.fromId);
+      const initial = sender ? sender.name[0] : '?';
+      return `<div class="msg-item">
+        <div class="msg-avatar">${initial}</div>
+        <div class="msg-body">
+          <div class="msg-subject">${esc(m.subject||'(No subject)')}</div>
+          <div class="msg-preview">${esc(m.body||'')}</div>
+        </div>
+        <div class="msg-time">${m.createdAt ? new Date(m.createdAt).toLocaleDateString() : ''}</div>
+      </div>`;
+    }).join('');
+  } catch { $('social-messages').innerHTML = '<div class="empty"><p>Could not load messages</p></div>'; }
+}
+
+async function renderGroups() {
+  try {
+    const res = await api.get('/api/social?type=groups');
+    const groups = res.groups || [];
+    const container = $('social-groups');
+    if (!groups.length) { container.innerHTML = '<div class="empty"><p>No groups yet. Create one!</p></div>'; return; }
+    container.innerHTML = groups.map(g => `
+      <div class="group-card">
+        <div class="group-icon">👥</div>
+        <div class="group-info">
+          <div class="group-name">${esc(g.name)}</div>
+          ${g.description ? `<div class="group-desc">${esc(g.description)}</div>` : ''}
+          <div class="group-meta">${g.memberCount||0} members</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="joinGroup('${g.id}')">Join</button>
+      </div>
+    `).join('');
+  } catch { $('social-groups').innerHTML = '<div class="empty"><p>Could not load groups</p></div>'; }
+}
+
+async function renderFollowers() {
+  try {
+    const res = await api.get('/api/social?type=followers');
+    const followers = res.followers || [];
+    const container = $('social-followers');
+    if (!followers.length) { container.innerHTML = '<div class="empty"><p>Follow players to build your network</p></div>'; return; }
+    container.innerHTML = followers.map(f => {
+      const player = state.players.find(p => p.id === f.playerId);
+      const team = player ? state.teams.find(t => t.id === player.teamId) : null;
+      const isFollowing = f.following !== false;
+      return player ? `<div class="follower-card">
+        <div class="follower-avatar">${player.name[0]}</div>
+        <div class="follower-info">
+          <div class="follower-name">${esc(player.name)}</div>
+          <div class="follower-team">${team ? esc(team.name) : 'Free Agent'} · ${player.position||'MID'}</div>
+        </div>
+        <button class="btn btn-sm btn-follow ${isFollowing?'following':'not-following'}" onclick="toggleFollow('${player.id}', ${!isFollowing})">
+          ${isFollowing ? 'Following' : 'Follow'}
+        </button>
+      </div>` : '';
+    }).join('');
+  } catch { $('social-followers').innerHTML = '<div class="empty"><p>Could not load followers</p></div>'; }
+}
+
+$('send-msg-btn').addEventListener('click', () => {
+  const opts = state.players.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  $('msg-recipient').innerHTML = '<option value="">Select Player</option>'+opts;
+  $('message-form').reset(); openModal('message-modal');
+});
+
+$('message-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = { toId:$('msg-recipient').value, subject:$('msg-subject').value, body:$('msg-body').value };
+  if (!d.toId) { showToast('Select a recipient.'); return; }
+  await api.post('/api/social?type=messages', d);
+  showToast('Message sent.');
+  closeModal('message-modal'); renderMessages();
+});
+
+$('add-group-btn').addEventListener('click', () => {
+  $('group-form').reset(); $('group-id').value = '';
+  $('group-modal-title').textContent = 'Create Group'; openModal('group-modal');
+});
+
+$('group-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const id = $('group-id').value;
+  const d = { name:$('group-name').value, description:$('group-description').value };
+  if (id) {
+    await api.put(`/api/social?type=groups`, { ...d, groupId:id });
+    showToast('Group updated.');
+  } else {
+    await api.post('/api/social?type=groups', d);
+    showToast('Group created.');
+  }
+  closeModal('group-modal'); renderGroups();
+});
+
+window.joinGroup = async groupId => {
+  await api.post('/api/social?type=groups', { groupId, action:'join' });
+  showToast('Joined group!'); renderGroups();
+};
+
+window.toggleFollow = async (playerId, follow) => {
+  await api.post('/api/social?type=followers', { playerId, follow });
+  showToast(follow ? 'Following player!' : 'Unfollowed player.');
+  renderFollowers();
+};
 
 /* ─── Helpers ─── */
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
