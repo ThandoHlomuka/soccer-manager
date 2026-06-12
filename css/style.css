@@ -495,3 +495,54 @@ body{
 @media(max-width:480px){
   .teams-grid,.players-grid{grid-template-columns:1fr}
 }
+
+/* ─── Admin Mode ─── */
+.admin-toggle{
+  background:rgba(239,68,68,0.1)!important;
+  color:var(--danger)!important;
+  border:1px solid rgba(239,68,68,0.2)!important;
+  margin-left:auto;border-radius:8px!important;
+  cursor:pointer;font-size:0.78rem!important;
+  padding:0.35rem 0.7rem!important;
+  font-family:inherit!important;
+  transition:all 0.2s;
+}
+.admin-toggle:hover{background:rgba(239,68,68,0.2)!important}
+.admin-toggle.active{background:var(--danger)!important;color:#fff!important;border-color:var(--danger)!important}
+
+/* Admin mode body */
+.admin-mode .admin-toggle{background:var(--danger)!important;color:#fff!important;border-color:var(--danger)!important}
+
+.admin-bar{
+  display:none;align-items:center;gap:0.5rem;
+  padding:0.4rem 0.75rem;margin-bottom:0.75rem;
+  background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);
+  border-radius:8px;font-size:0.78rem;color:var(--text-secondary);
+}
+.admin-mode .admin-bar{display:flex}
+.admin-bar .badge{
+  padding:0.15rem 0.5rem;border-radius:4px;
+  background:var(--danger);color:#fff;font-size:0.65rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.05em;
+}
+.admin-btn{
+  padding:0.25rem 0.6rem;border-radius:6px;font-size:0.72rem;font-weight:600;
+  border:none;cursor:pointer;transition:all 0.2s;
+}
+.admin-btn-edit{background:rgba(99,102,241,0.12);color:#818cf8}
+.admin-btn-edit:hover{background:rgba(99,102,241,0.2)}
+.admin-btn-del{background:rgba(239,68,68,0.12);color:var(--danger)}
+.admin-btn-del:hover{background:rgba(239,68,68,0.2)}
+.admin-btn-add{
+  background:var(--danger);color:#fff;padding:0.35rem 0.8rem;
+  border-radius:8px;font-size:0.78rem;font-weight:600;border:none;
+  cursor:pointer;transition:all 0.2s;
+}
+.admin-btn-add:hover{opacity:0.85}
+
+.admin-mode .team-card,
+.admin-mode .player-card,
+.admin-mode .transfer-card,
+.admin-mode .match-card{border-color:rgba(239,68,68,0.08)!important}
+.admin-mode .team-card:hover,
+.admin-mode .player-card:hover{border-color:rgba(239,68,68,0.2)!important}

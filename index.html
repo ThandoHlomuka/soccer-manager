@@ -22,6 +22,7 @@
         <a href="#" class="nav-item" data-view="matches">Matches</a>
         <a href="#" class="nav-item" data-view="stats">Stats</a>
         <a href="#" class="nav-item" data-view="transfers">Transfers</a>
+        <button class="nav-item admin-toggle" id="admin-toggle">⚙️ Admin</button>
       </div>
     </div>
   </nav>
@@ -164,6 +165,164 @@
   <div class="modal" id="transfer-modal">
     <div class="modal-backdrop" data-close="transfer-modal"></div>
     <div class="modal-content" id="transfer-modal-body"></div>
+  </div>
+
+  <!-- ═══ Admin Modals ═══ -->
+
+  <!-- Team Form Modal -->
+  <div class="modal" id="team-form-modal">
+    <div class="modal-backdrop" data-close="team-form-modal"></div>
+    <div class="modal-content" style="max-width:480px">
+      <button class="modal-close" data-close="team-form-modal">&times;</button>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text)" id="team-form-title">Add Team</h3>
+      <form id="team-form" onsubmit="return saveTeam(event)">
+        <input type="hidden" id="team-id" />
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Name</label><input class="filter-select" style="width:100%" type="text" id="team-name" required /></div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Short Name</label><input class="filter-select" style="width:100%" type="text" id="team-short-name" /></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Founded</label><input class="filter-select" style="width:100%" type="number" id="team-founded" /></div>
+          </div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Stadium</label><input class="filter-select" style="width:100%" type="text" id="team-stadium" /></div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Color 1</label><input class="filter-select" style="width:100%;height:38px;padding:0.2rem" type="color" id="team-color1" value="#059669" /></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Color 2</label><input class="filter-select" style="width:100%;height:38px;padding:0.2rem" type="color" id="team-color2" value="#ffffff" /></div>
+          </div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+            <button type="button" class="btn btn-outline btn-sm" data-close="team-form-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Player Form Modal -->
+  <div class="modal" id="player-form-modal">
+    <div class="modal-backdrop" data-close="player-form-modal"></div>
+    <div class="modal-content" style="max-width:520px">
+      <button class="modal-close" data-close="player-form-modal">&times;</button>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text)" id="player-form-title">Add Player</h3>
+      <form id="player-form" onsubmit="return savePlayer(event)">
+        <input type="hidden" id="player-id" />
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Name</label><input class="filter-select" style="width:100%" type="text" id="player-name" required /></div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Number</label><input class="filter-select" style="width:100%" type="number" id="player-number" /></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Position</label><select class="filter-select" style="width:100%" id="player-position"><option value="GK">GK</option><option value="DEF">DEF</option><option value="MID">MID</option><option value="FW">FW</option></select></div>
+          </div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Team</label><select class="filter-select" style="width:100%" id="player-team-id"></select></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Nationality</label><input class="filter-select" style="width:100%" type="text" id="player-nationality" /></div>
+          </div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Foot</label><select class="filter-select" style="width:100%" id="player-foot"><option value="right">Right</option><option value="left">Left</option><option value="both">Both</option></select></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Diet</label><select class="filter-select" style="width:100%" id="player-diet"><option value="">Standard</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="halal">Halal</option><option value="keto">Keto</option></select></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem" id="player-abilities">
+            <div><label style="font-size:0.75rem;font-weight:600;color:var(--text-muted)">Pace</label><input class="filter-select" style="width:100%" type="range" id="player-pace" min="1" max="99" value="50" oninput="this.nextElementSibling.textContent=this.value" /><span style="font-size:0.75rem;color:var(--primary-light);font-weight:700">50</span></div>
+            <div><label style="font-size:0.75rem;font-weight:600;color:var(--text-muted)">Shooting</label><input class="filter-select" style="width:100%" type="range" id="player-shooting" min="1" max="99" value="50" oninput="this.nextElementSibling.textContent=this.value" /><span style="font-size:0.75rem;color:var(--primary-light);font-weight:700">50</span></div>
+            <div><label style="font-size:0.75rem;font-weight:600;color:var(--text-muted)">Passing</label><input class="filter-select" style="width:100%" type="range" id="player-passing" min="1" max="99" value="50" oninput="this.nextElementSibling.textContent=this.value" /><span style="font-size:0.75rem;color:var(--primary-light);font-weight:700">50</span></div>
+            <div><label style="font-size:0.75rem;font-weight:600;color:var(--text-muted)">Defending</label><input class="filter-select" style="width:100%" type="range" id="player-defending" min="1" max="99" value="50" oninput="this.nextElementSibling.textContent=this.value" /><span style="font-size:0.75rem;color:var(--primary-light);font-weight:700">50</span></div>
+            <div><label style="font-size:0.75rem;font-weight:600;color:var(--text-muted)">Dribbling</label><input class="filter-select" style="width:100%" type="range" id="player-dribbling" min="1" max="99" value="50" oninput="this.nextElementSibling.textContent=this.value" /><span style="font-size:0.75rem;color:var(--primary-light);font-weight:700">50</span></div>
+            <div><label style="font-size:0.75rem;font-weight:600;color:var(--text-muted)">Physical</label><input class="filter-select" style="width:100%" type="range" id="player-physical" min="1" max="99" value="50" oninput="this.nextElementSibling.textContent=this.value" /><span style="font-size:0.75rem;color:var(--primary-light);font-weight:700">50</span></div>
+          </div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+            <button type="button" class="btn btn-outline btn-sm" data-close="player-form-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Match Form Modal -->
+  <div class="modal" id="match-form-modal">
+    <div class="modal-backdrop" data-close="match-form-modal"></div>
+    <div class="modal-content" style="max-width:480px">
+      <button class="modal-close" data-close="match-form-modal">&times;</button>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text)" id="match-form-title">Schedule Match</h3>
+      <form id="match-form" onsubmit="return saveMatch(event)">
+        <input type="hidden" id="match-id" />
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Home Team</label><select class="filter-select" style="width:100%" id="match-home-team-id"></select></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Away Team</label><select class="filter-select" style="width:100%" id="match-away-team-id"></select></div>
+          </div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Date</label><input class="filter-select" style="width:100%" type="date" id="match-date" /></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Time</label><input class="filter-select" style="width:100%" type="time" id="match-time" value="20:00" /></div>
+          </div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Venue</label><input class="filter-select" style="width:100%" type="text" id="match-venue" /></div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Home Score</label><input class="filter-select" style="width:100%" type="number" id="match-home-score" /></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Away Score</label><input class="filter-select" style="width:100%" type="number" id="match-away-score" /></div>
+          </div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Status</label><select class="filter-select" style="width:100%" id="match-status"><option value="scheduled">Scheduled</option><option value="played">Played</option><option value="postponed">Postponed</option></select></div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+            <button type="button" class="btn btn-outline btn-sm" data-close="match-form-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ad Form Modal -->
+  <div class="modal" id="ad-form-modal">
+    <div class="modal-backdrop" data-close="ad-form-modal"></div>
+    <div class="modal-content" style="max-width:480px">
+      <button class="modal-close" data-close="ad-form-modal">&times;</button>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text)" id="ad-form-title">Add Ad</h3>
+      <form id="ad-form" onsubmit="return saveAd(event)">
+        <input type="hidden" id="ad-id" />
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Advertiser</label><input class="filter-select" style="width:100%" type="text" id="ad-advertiser" required /></div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Product</label><input class="filter-select" style="width:100%" type="text" id="ad-product" /></div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Description</label><input class="filter-select" style="width:100%" type="text" id="ad-description" /></div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Image URL</label><input class="filter-select" style="width:100%" type="url" id="ad-image-url" /></div>
+          <div><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Link URL</label><input class="filter-select" style="width:100%" type="url" id="ad-link-url" /></div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Status</label><select class="filter-select" style="width:100%" id="ad-status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Clicks</label><input class="filter-select" style="width:100%" type="number" id="ad-clicks" value="0" /></div>
+          </div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+            <button type="button" class="btn btn-outline btn-sm" data-close="ad-form-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Transfer Form Modal -->
+  <div class="modal" id="transfer-form-modal">
+    <div class="modal-backdrop" data-close="transfer-form-modal"></div>
+    <div class="modal-content" style="max-width:480px">
+      <button class="modal-close" data-close="transfer-form-modal">&times;</button>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text)" id="transfer-form-title">Add Transfer</h3>
+      <form id="transfer-form" onsubmit="return saveTransfer(event)">
+        <input type="hidden" id="transfer-id" />
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Player</label><select class="filter-select" style="width:100%" id="transfer-player-id"></select></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">From Team</label><select class="filter-select" style="width:100%" id="transfer-from-team-id"></select></div>
+          </div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">To Team</label><select class="filter-select" style="width:100%" id="transfer-to-team-id"></select></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Fee (£)</label><input class="filter-select" style="width:100%" type="number" id="transfer-fee" step="0.01" /></div>
+          </div>
+          <div style="display:flex;gap:0.75rem">
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Date</label><input class="filter-select" style="width:100%" type="date" id="transfer-date" /></div>
+            <div style="flex:1"><label style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:0.25rem">Status</label><select class="filter-select" style="width:100%" id="transfer-status"><option value="completed">Completed</option><option value="pending">Pending</option><option value="cancelled">Cancelled</option></select></div>
+          </div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+            <button type="button" class="btn btn-outline btn-sm" data-close="transfer-form-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="js/app.js"></script>

@@ -20,7 +20,7 @@ function navigate(view) {
   render(view);
 }
 function hash(){navigate(location.hash.replace('#','')||'home')}
-document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();location.hash=n.dataset.view}));
+document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();location.hash=n.dataset.view}));
 window.addEventListener('hashchange',hash);
 $('nav-toggle').addEventListener('click',()=>$('nav-links').classList.toggle('open'));
 
@@ -162,11 +162,13 @@ function medal(i){if(i===0)return'🥇';if(i===1)return'🥈';if(i===2)return'�
 function renderTeams(){
   const grid=$('teams-grid');
   if(!S.teams.length){grid.innerHTML='<div class="empty"><p>No teams yet</p></div>';return}
-  grid.innerHTML=S.teams.map(t=>{
+  const ab=isAdmin?'<div class="admin-bar"><span class="badge">Admin</span><span>Manage teams</span><button class="admin-btn-add" onclick="openTeamForm()">+ Add Team</button></div>':'';
+  grid.innerHTML=ab+S.teams.map(t=>{
     const played=S.matches.filter(m=>(m.homeTeamId===t.id||m.awayTeamId===t.id)&&m.homeScore!=null);
     const goals=played.reduce((s,m)=>s+(m.homeTeamId===t.id?m.homeScore:m.awayScore),0)+(played.reduce((s,m)=>s+(m.awayTeamId===t.id?m.awayScore:m.homeScore),0));
     const wins=played.filter(m=>(m.homeTeamId===t.id&&m.homeScore>m.awayScore)||(m.awayTeamId===t.id&&m.awayScore>m.homeScore)).length;
-    return `<div class="team-card" onclick="showTeam('${t.id}')"><div style="display:flex;align-items:center;gap:1rem"><div class="team-badge" style="background:linear-gradient(135deg,${t.colors?.[0]||'#666'},${t.colors?.[1]||'#999'})">${(t.shortName||t.name)[0]}</div><div><div class="team-card-name">${esc(t.name)}</div><div class="team-card-meta">${esc(t.shortName||'')}${t.stadium?' · '+esc(t.stadium):''}</div></div></div><div class="team-card-stats"><div class="team-card-stat"><div class="val">${played.length}</div><div class="lbl">Played</div></div><div class="team-card-stat"><div class="val">${wins}</div><div class="lbl">Wins</div></div><div class="team-card-stat"><div class="val">${goals}</div><div class="lbl">Goals</div></div></div></div>`;
+    const amb=isAdmin?`<div style="display:flex;gap:0.25rem;margin-top:0.5rem;justify-content:flex-end"><button class="admin-btn admin-btn-edit" onclick="event.stopPropagation();openTeamForm('${t.id}')">Edit</button><button class="admin-btn admin-btn-del" onclick="event.stopPropagation();deleteTeam('${t.id}')">Del</button></div>`:'';
+    return `<div class="team-card" onclick="showTeam('${t.id}')"><div style="display:flex;align-items:center;gap:1rem"><div class="team-badge" style="background:linear-gradient(135deg,${t.colors?.[0]||'#666'},${t.colors?.[1]||'#999'})">${(t.shortName||t.name)[0]}</div><div><div class="team-card-name">${esc(t.name)}</div><div class="team-card-meta">${esc(t.shortName||'')}${t.stadium?' · '+esc(t.stadium):''}</div></div></div><div class="team-card-stats"><div class="team-card-stat"><div class="val">${played.length}</div><div class="lbl">Played</div></div><div class="team-card-stat"><div class="val">${wins}</div><div class="lbl">Wins</div></div><div class="team-card-stat"><div class="val">${goals}</div><div class="lbl">Goals</div></div></div>${amb}</div>`;
   }).join('');
 }
 
@@ -195,10 +197,12 @@ function renderPlayers(){
   if(posF&&posF.value)list=list.filter(p=>p.position===posF.value);
   const grid=$('players-grid');
   if(!list.length){grid.innerHTML='<div class="empty"><p>No players found</p></div>';return}
-  grid.innerHTML=list.map(p=>{
+  const pab=isAdmin?'<div class="admin-bar"><span class="badge">Admin</span><span>Manage players</span><button class="admin-btn-add" onclick="openPlayerForm()">+ Add Player</button></div>':'';
+  grid.innerHTML=pab+list.map(p=>{
     const t=S.teams.find(t=>t.id===p.teamId);
     const ovr=p.pace?Math.round((p.pace+p.shooting+p.passing+p.defending+p.dribbling+p.physical)/6):null;
-    return `<div class="player-card" onclick="showPlayer('${p.id}')"><div class="player-avatar">${(p.name||'?')[0]}</div><div class="player-info"><div class="player-name">${esc(p.name)} <span class="pos-badge">${p.position||'MID'}</span></div><div class="player-team">${t?esc(t.name):'Free Agent'}${p.nationality?' · '+esc(p.nationality):''}</div><div class="player-mini-stats"><div class="player-mini-stat"><div class="v">${p.goals||0}</div><div class="l">G</div></div><div class="player-mini-stat"><div class="v">${p.assists||0}</div><div class="l">A</div></div><div class="player-mini-stat"><div class="v">${p.appearances||0}</div><div class="l">App</div></div></div></div>${ovr?`<div class="player-ovr">${ovr}</div>`:''}</div>`;
+    const pamb=isAdmin?`<div style="display:flex;gap:0.25rem;margin-top:0.5rem;justify-content:flex-end"><button class="admin-btn admin-btn-edit" onclick="event.stopPropagation();openPlayerForm('${p.id}')">Edit</button><button class="admin-btn admin-btn-del" onclick="event.stopPropagation();deletePlayer('${p.id}')">Del</button></div>`:'';
+    return `<div class="player-card" onclick="showPlayer('${p.id}')"><div class="player-avatar">${(p.name||'?')[0]}</div><div class="player-info"><div class="player-name">${esc(p.name)} <span class="pos-badge">${p.position||'MID'}</span></div><div class="player-team">${t?esc(t.name):'Free Agent'}${p.nationality?' · '+esc(p.nationality):''}</div><div class="player-mini-stats"><div class="player-mini-stat"><div class="v">${p.goals||0}</div><div class="l">G</div></div><div class="player-mini-stat"><div class="v">${p.assists||0}</div><div class="l">A</div></div><div class="player-mini-stat"><div class="v">${p.appearances||0}</div><div class="l">App</div></div></div></div>${ovr?`<div class="player-ovr">${ovr}</div>`:''}${pamb}</div>`;
   }).join('');
 }
 
@@ -226,10 +230,12 @@ function renderMatches(){
   const list=$('matches-list');
   const sorted=[...S.matches].sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
   if(!sorted.length){list.innerHTML='<div class="empty"><p>No matches yet</p></div>';return}
-  list.innerHTML=sorted.map(m=>{
+  const mab=isAdmin?'<div class="admin-bar"><span class="badge">Admin</span><span>Manage matches</span><button class="admin-btn-add" onclick="openMatchForm()">+ Schedule Match</button></div>':'';
+  list.innerHTML=mab+sorted.map(m=>{
     const s=m.homeScore!=null?`${m.homeScore}-${m.awayScore}`:'<span style="color:var(--text-muted)">vs</span>';
     const sc=m.status||'scheduled';
-    return `<div class="match-card" style="min-width:auto;flex-shrink:1"><div class="match-date">${fDate(m.date)}<br><span style="font-size:0.65rem;color:var(--text-muted)">${m.time||''}</span></div><div class="match-teams"><div class="match-team" style="text-align:right">${m.homeTeam?.shortName||'?'}</div><span class="match-score">${s}</span><div class="match-team" style="text-align:left">${m.awayTeam?.shortName||'?'}</div></div><span class="match-status status-${sc}">${sc}</span><span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0">${m.venue?esc(m.venue).split(' ').slice(0,2).join(' '):''}</span></div>`;
+    const mamb=isAdmin?`<div style="display:flex;gap:0.25rem;margin-left:auto"><button class="admin-btn admin-btn-edit" onclick="event.stopPropagation();openMatchForm('${m.id}')">Edit</button><button class="admin-btn admin-btn-del" onclick="event.stopPropagation();deleteMatch('${m.id}')">Del</button></div>`:'';
+    return `<div class="match-card" style="min-width:auto;flex-shrink:1"><div class="match-date">${fDate(m.date)}<br><span style="font-size:0.65rem;color:var(--text-muted)">${m.time||''}</span></div><div class="match-teams"><div class="match-team" style="text-align:right">${m.homeTeam?.shortName||'?'}</div><span class="match-score">${s}</span><div class="match-team" style="text-align:left">${m.awayTeam?.shortName||'?'}</div></div><span class="match-status status-${sc}">${sc}</span><span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0">${m.venue?esc(m.venue).split(' ').slice(0,2).join(' '):''}</span>${mamb}</div>`;
   }).join('');
 }
 
@@ -260,11 +266,13 @@ async function renderTransfers(){
   const tfs=res.transfers||[];
   const list=$('transfers-list');
   if(!tfs.length){list.innerHTML='<div class="empty"><p>No transfers yet</p></div>';return}
-  list.innerHTML=tfs.map(t=>{
+  const tfab=isAdmin?'<div class="admin-bar"><span class="badge">Admin</span><span>Manage transfers</span><button class="admin-btn-add" onclick="openTransferForm()">+ Add Transfer</button></div>':'';
+  list.innerHTML=tfab+tfs.map(t=>{
     const f=t.fee?`£${Number(t.fee).toLocaleString()}`:'Free';
     const from=S.teams.find(te=>te.id===t.fromTeamId);
     const to=S.teams.find(te=>te.id===t.toTeamId);
-    return `<div class="transfer-card" onclick="showTransfer('${t.id}')"><div class="transfer-icon">🔄</div><div class="transfer-info"><div class="transfer-player">${esc(t.playerName||'Unknown')}</div><div class="transfer-path">${from?esc(from.shortName||from.name):'?'} <span class="arrow">→</span> ${to?esc(to.shortName||to.name):'?'}</div><div class="transfer-footer"><span class="transfer-fee">${f}</span><span>${t.date||''}</span><span class="transfer-badge tb-${t.status||'pending'}">${t.status||'pending'}</span></div></div></div>`;
+    const tfamb=isAdmin?`<div style="display:flex;gap:0.25rem;margin-top:0.5rem;justify-content:flex-end"><button class="admin-btn admin-btn-del" onclick="event.stopPropagation();deleteTransfer('${t.id}')">Delete</button></div>`:'';
+    return `<div class="transfer-card" onclick="showTransfer('${t.id}')"><div class="transfer-icon">🔄</div><div class="transfer-info"><div class="transfer-player">${esc(t.playerName||'Unknown')}</div><div class="transfer-path">${from?esc(from.shortName||from.name):'?'} <span class="arrow">→</span> ${to?esc(to.shortName||to.name):'?'}</div><div class="transfer-footer"><span class="transfer-fee">${f}</span><span>${t.date||''}</span><span class="transfer-badge tb-${t.status||'pending'}">${t.status||'pending'}</span></div>${tfamb}</div></div>`;
   }).join('');
 }
 
@@ -277,6 +285,227 @@ window.showTransfer=async id=>{
   $('transfer-modal-body').innerHTML=`<button class="modal-close" data-close="transfer-modal">&times;</button>
     <div class="transfer-detail"><div style="font-size:3rem">🔄</div><div class="transfer-detail-path">${from?esc(from.shortName):'?'} <span class="x">→</span> ${to?esc(to.shortName):'?'}</div><div style="font-size:1.3rem;font-weight:800;color:var(--text)">${esc(t.playerName||p?.name||'Unknown')}</div><div class="transfer-detail-meta"><div class="transfer-detail-item"><div class="v">${fee}</div><div class="l">Fee</div></div><div class="transfer-detail-item"><div class="v">${t.date||'N/A'}</div><div class="l">Date</div></div><div class="transfer-detail-item"><div class="v" style="color:var(--primary-light)">${t.status||'pending'}</div><div class="l">Status</div></div></div></div>`;
   openModal('transfer-modal');
+};
+
+/* ─── Admin Mode ─── */
+let isAdmin = false;
+
+function toggleAdmin() {
+  isAdmin = !isAdmin;
+  document.body.classList.toggle('admin-mode', isAdmin);
+  render(location.hash.replace('#','')||'home');
+}
+document.getElementById('admin-toggle')?.addEventListener('click', toggleAdmin);
+
+function populateTeamSelects() {
+  ['player-team-id','match-home-team-id','match-away-team-id','transfer-from-team-id','transfer-to-team-id'].forEach(id => {
+    const sel = $(id); if (!sel) return;
+    sel.innerHTML = '<option value="">Select Team</option>' + S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  });
+}
+function populatePlayerSelect() {
+  const sel = $('#transfer-player-id'); if (!sel) return;
+  sel.innerHTML = '<option value="">Select Player</option>' + S.players.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+}
+
+/* ── Team CRUD ── */
+window.openTeamForm = function(id) {
+  populateTeamSelects();
+  const f = $('#team-form'); f && f.reset();
+  $('#team-color1') && ($('#team-color1').value = '#059669');
+  $('#team-color2') && ($('#team-color2').value = '#ffffff');
+  if (id) {
+    const t = S.teams.find(x => x.id === id); if (!t) return;
+    $('#team-form-title').textContent = 'Edit Team';
+    $('#team-id').value = t.id;
+    $('#team-name').value = t.name || '';
+    $('#team-short-name').value = t.shortName || '';
+    $('#team-founded').value = t.founded || '';
+    $('#team-stadium').value = t.stadium || '';
+    $('#team-color1').value = t.colors?.[0] || '#059669';
+    $('#team-color2').value = t.colors?.[1] || '#ffffff';
+  } else {
+    $('#team-form-title').textContent = 'Add Team';
+    $('#team-id').value = '';
+  }
+  openModal('team-form-modal');
+};
+window.saveTeam = async function(e) {
+  e.preventDefault();
+  const id = $('#team-id').value;
+  const data = { name: $('#team-name').value, shortName: $('#team-short-name').value, founded: $('#team-founded').value, stadium: $('#team-stadium').value, colors: [$('#team-color1').value, $('#team-color2').value] };
+  const r = id ? await fetch('/api/teams?id='+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json()) : await api.post('/api/teams',data);
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast(id ? 'Team updated' : 'Team created');
+  closeModal('team-form-modal');
+  render(location.hash.replace('#','')||'home');
+};
+window.deleteTeam = async function(id) {
+  if (!confirm('Delete this team?')) return;
+  const r = await fetch('/api/teams?id='+id,{method:'DELETE'}).then(r=>r.json());
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast('Team deleted');
+  render(location.hash.replace('#','')||'home');
+};
+
+/* ── Player CRUD ── */
+window.openPlayerForm = function(id) {
+  populateTeamSelects();
+  const f = $('#player-form'); f && f.reset();
+  document.querySelectorAll('#player-abilities input[type="range"]').forEach(r => { r.value = 50; r.nextElementSibling.textContent = '50'; });
+  if (id) {
+    const p = S.players.find(x => x.id === id); if (!p) return;
+    $('#player-form-title').textContent = 'Edit Player';
+    $('#player-id').value = p.id;
+    $('#player-name').value = p.name || '';
+    $('#player-number').value = p.number || '';
+    $('#player-position').value = p.position || 'MID';
+    $('#player-team-id').value = p.teamId || '';
+    $('#player-nationality').value = p.nationality || '';
+    $('#player-foot').value = p.foot || 'right';
+    $('#player-diet').value = p.diet || '';
+    $('#player-pace').value = p.pace || 50;
+    $('#player-shooting').value = p.shooting || 50;
+    $('#player-passing').value = p.passing || 50;
+    $('#player-defending').value = p.defending || 50;
+    $('#player-dribbling').value = p.dribbling || 50;
+    $('#player-physical').value = p.physical || 50;
+    document.querySelectorAll('#player-abilities input[type="range"]').forEach(r => { r.nextElementSibling.textContent = r.value; });
+  } else {
+    $('#player-form-title').textContent = 'Add Player';
+    $('#player-id').value = '';
+  }
+  openModal('player-form-modal');
+};
+window.savePlayer = async function(e) {
+  e.preventDefault();
+  const id = $('#player-id').value;
+  const data = {
+    name: $('#player-name').value, number: Number($('#player-number').value), position: $('#player-position').value,
+    teamId: $('#player-team-id').value, nationality: $('#player-nationality').value, foot: $('#player-foot').value,
+    diet: $('#player-diet').value, pace: Number($('#player-pace').value), shooting: Number($('#player-shooting').value),
+    passing: Number($('#player-passing').value), defending: Number($('#player-defending').value),
+    dribbling: Number($('#player-dribbling').value), physical: Number($('#player-physical').value),
+  };
+  const r = id ? await fetch('/api/players?id='+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json()) : await api.post('/api/players',data);
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast(id ? 'Player updated' : 'Player created');
+  closeModal('player-form-modal');
+  render(location.hash.replace('#','')||'home');
+};
+window.deletePlayer = async function(id) {
+  if (!confirm('Delete this player?')) return;
+  const r = await fetch('/api/players?id='+id,{method:'DELETE'}).then(r=>r.json());
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast('Player deleted');
+  render(location.hash.replace('#','')||'home');
+};
+
+/* ── Match CRUD ── */
+window.openMatchForm = function(id) {
+  populateTeamSelects();
+  const f = $('#match-form'); f && f.reset();
+  if (id) {
+    const m = S.matches.find(x => x.id === id); if (!m) return;
+    $('#match-form-title').textContent = 'Edit Match';
+    $('#match-id').value = m.id;
+    $('#match-home-team-id').value = m.homeTeamId || '';
+    $('#match-away-team-id').value = m.awayTeamId || '';
+    $('#match-date').value = m.date ? m.date.split('T')[0] : '';
+    $('#match-time').value = m.time || '20:00';
+    $('#match-venue').value = m.venue || '';
+    $('#match-home-score').value = m.homeScore ?? '';
+    $('#match-away-score').value = m.awayScore ?? '';
+    $('#match-status').value = m.status || 'scheduled';
+  } else {
+    $('#match-form-title').textContent = 'Schedule Match';
+    $('#match-id').value = '';
+  }
+  openModal('match-form-modal');
+};
+window.saveMatch = async function(e) {
+  e.preventDefault();
+  const id = $('#match-id').value;
+  const hs = $('#match-home-score').value, as = $('#match-away-score').value;
+  const data = {
+    homeTeamId: $('#match-home-team-id').value, awayTeamId: $('#match-away-team-id').value,
+    date: $('#match-date').value, time: $('#match-time').value, venue: $('#match-venue').value,
+    homeScore: hs !== '' ? Number(hs) : null, awayScore: as !== '' ? Number(as) : null,
+    status: $('#match-status').value,
+  };
+  const r = id ? await fetch('/api/matches?id='+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json()) : await api.post('/api/matches',data);
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast(id ? 'Match updated' : 'Match created');
+  closeModal('match-form-modal');
+  render(location.hash.replace('#','')||'home');
+};
+window.deleteMatch = async function(id) {
+  if (!confirm('Delete this match?')) return;
+  const r = await fetch('/api/matches?id='+id,{method:'DELETE'}).then(r=>r.json());
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast('Match deleted');
+  render(location.hash.replace('#','')||'home');
+};
+
+/* ── Ad CRUD ── */
+window.openAdForm = function(id) {
+  if (id) { toast('Editing ads inline coming soon'); return; }
+  $('#ad-form-title').textContent = 'Add Ad';
+  $('#ad-id').value = '';
+  const f = $('#ad-form'); f && f.reset();
+  openModal('ad-form-modal');
+};
+window.saveAd = async function(e) {
+  e.preventDefault();
+  const id = $('#ad-id').value;
+  const data = {
+    advertiser: $('#ad-advertiser').value, product: $('#ad-product').value,
+    description: $('#ad-description').value, imageUrl: $('#ad-image-url').value,
+    linkUrl: $('#ad-link-url').value, status: $('#ad-status').value,
+    clicks: Number($('#ad-clicks').value),
+  };
+  const r = id ? await fetch('/api/ads?id='+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json()) : await api.post('/api/ads',data);
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast(id ? 'Ad updated' : 'Ad created');
+  closeModal('ad-form-modal');
+};
+window.deleteAd = async function(id) {
+  if (!confirm('Delete this ad?')) return;
+  const r = await fetch('/api/ads?id='+id,{method:'DELETE'}).then(r=>r.json());
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast('Ad deleted');
+};
+
+/* ── Transfer CRUD ── */
+window.openTransferForm = function(id) {
+  if (id) { toast('Editing transfers inline coming soon'); return; }
+  populateTeamSelects();
+  populatePlayerSelect();
+  const f = $('#transfer-form'); f && f.reset();
+  $('#transfer-form-title').textContent = 'Add Transfer';
+  $('#transfer-id').value = '';
+  openModal('transfer-form-modal');
+};
+window.saveTransfer = async function(e) {
+  e.preventDefault();
+  const id = $('#transfer-id').value;
+  const data = {
+    playerId: $('#transfer-player-id').value, fromTeamId: $('#transfer-from-team-id').value,
+    toTeamId: $('#transfer-to-team-id').value, fee: Number($('#transfer-fee').value),
+    date: $('#transfer-date').value, status: $('#transfer-status').value,
+  };
+  const r = id ? await fetch('/api/transfers?id='+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json()) : await api.post('/api/transfers',data);
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast(id ? 'Transfer updated' : 'Transfer created');
+  closeModal('transfer-form-modal');
+  render(location.hash.replace('#','')||'home');
+};
+window.deleteTransfer = async function(id) {
+  if (!confirm('Delete this transfer?')) return;
+  const r = await fetch('/api/transfers?id='+id,{method:'DELETE'}).then(r=>r.json());
+  if (r.error) { toast('Error: '+r.error); return; }
+  toast('Transfer deleted');
+  render(location.hash.replace('#','')||'home');
 };
 
 /* ─── Helpers ─── */
