@@ -1,0 +1,13 @@
+{
+  "name": "soccer-manager",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Comprehensive soccer team management app with stats tracking, standings, and CRUD",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "npx serve ."
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.34.0"
+  }
+}
